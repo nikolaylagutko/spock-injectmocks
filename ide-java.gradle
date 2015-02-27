@@ -1,0 +1,58 @@
+/**
+ * Coniguration Eclipse preferences
+ */
+
+apply plugin: 'eclipse'
+
+task eclipseSettings(type: Copy) {
+	from rootProject.files("eclipse/java/org.eclipse.jdt.ui.prefs")
+	into project.file('.settings/')
+	outputs.upToDateWhen { false }
+}
+
+task eclipseJdtPrepare(type: Copy) {
+	from rootProject.file("eclipse/java/org.eclipse.jdt.core.prefs")
+	into project.file(".settings/")
+	outputs.upToDateWhen { false }
+}
+
+task cleanEclipseJdtUi(type: Delete) {
+	delete project.file(".settings/java/org.eclipse.jdt.ui.prefs")
+	delete project.file(".settings/java/org.eclipse.jdt.core.prefs")
+}
+
+tasks["eclipseJdt"].dependsOn(eclipseJdtPrepare)
+tasks["cleanEclipse"].dependsOn(cleanEclipseJdtUi)
+tasks["eclipse"].dependsOn(eclipseSettings)
+
+eclipse {
+	project {
+		file {
+			withXml { xmlProvider ->
+				Node projectNode = xmlProvider.asNode()
+	
+				def filteredResources = projectNode.get('filteredResources')
+	
+				if (filteredResources) {
+					projectNode.remove(filteredResources);
+				}
+	
+				Node filteredResourcesNode = projectNode.appendNode('filteredResources')
+				def time = System.currentTimeMillis();
+	
+				def fullFilter = '1.0-name-matches-false-false-build'
+	
+				Node filter = filteredResourcesNode.appendNode('filter')
+	
+				filter.appendNode('id', time)
+				filter.appendNode('name', '')
+				filter.appendNode('type', '10')
+	
+				Node matcher = filter.appendNode('matcher')
+	
+				matcher.appendNode('id', 'org.eclipse.ui.ide.multiFilter')
+				matcher.appendNode('arguments', fullFilter)
+			}
+		}
+	}
+}

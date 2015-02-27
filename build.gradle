@@ -1,0 +1,23 @@
+apply plugin: 'java'
+apply plugin: 'groovy'
+
+apply from: 'ide-java.gradle'
+
+repositories {
+	jcenter()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+	compile group: 'org.spockframework',	name: 'spock-core',		version: spockVersion
+	compile group: 'org.spockframework',	name: 'spock-spring',	version: spockVersion
+	
+	testCompile group: 'junit',					name: 'junit',							version: junitVersion
+	testCompile group: 'org.codehaus.groovy',	name: 'groovy-all',						version: groovyVersion
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = gradleWrapperVersion
+}
