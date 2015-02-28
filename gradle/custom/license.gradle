@@ -1,0 +1,9 @@
+/**
+ * License plugin configuration
+ */
+
+apply plugin: 'license'
+
+license {
+	header project.file('HEADER')
+}

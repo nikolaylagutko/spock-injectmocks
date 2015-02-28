@@ -1,7 +1,22 @@
+buildscript {
+	repositories {
+		jcenter()
+	}
+	
+	dependencies {
+		classpath group: 'com.github.ben-manes',		name: 'gradle-versions-plugin',	version: gradleVersionsVersion
+		classpath group: 'nl.javadude.gradle.plugins',	name: 'license-gradle-plugin',	version: gradleLicenceVersion
+		classpath group: 'org.kt3k.gradle.plugin',		name: 'coveralls-gradle-plugin',		version: gradleCoverallsVersion
+	}
+}
+
+
 apply plugin: 'java'
 apply plugin: 'groovy'
 
-apply from: 'ide-java.gradle'
+apply from: 'gradle/custom/ide-java.gradle'
+apply from: 'gradle/custom/jacoco.gradle'
+apply from: 'gradle/custom/license.gradle'
 
 repositories {
 	jcenter()
