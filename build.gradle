@@ -11,11 +11,13 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
-	compile group: 'org.spockframework',	name: 'spock-core',		version: spockVersion
-	compile group: 'org.spockframework',	name: 'spock-spring',	version: spockVersion
+	compile group: 'org.spockframework',	name: 'spock-core',	version: spockVersion
 	
-	testCompile group: 'junit',					name: 'junit',							version: junitVersion
-	testCompile group: 'org.codehaus.groovy',	name: 'groovy-all',						version: groovyVersion
+	testCompile group: 'junit',					name: 'junit',			version: junitVersion
+	testCompile group: 'org.codehaus.groovy',	name: 'groovy-all',		version: groovyVersion
+	testCompile group: 'org.spockframework',	name: 'spock-spring',	version: spockVersion
+	testCompile group: 'java.inject',			name: 'javax.inject',	version: javaxInjectVersion
+	
 }
 
 task wrapper(type: Wrapper) {
