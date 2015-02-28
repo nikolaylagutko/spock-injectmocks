@@ -1,2 +1,2 @@
-# spock-modelcitizen
-API for integration Spockframework and Model-Citizen libraries
+# spock-injectmock
+Mockito's InjectMocks alternative for Spock
