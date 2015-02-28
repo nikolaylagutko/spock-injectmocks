@@ -13,19 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.gerzog.spock.spring.injectmock.test.data
-
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Service
+package org.gerzog.spock.injectmock.test.data
 
 /**
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */
-@Service
-class ConstructorAutowiredInjection {
+class Bean {
 
-	@Autowired
-	public ConstructorInjectInjection(def field1, field2) {
-	}
 }

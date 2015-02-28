@@ -13,32 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.gerzog.spock.spring.injectmock;
+package org.gerzog.spock.injectmock.api;
 
-import org.spockframework.runtime.extension.IGlobalExtension;
-import org.spockframework.runtime.model.SpecInfo;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */
-public class InjectMocksExtension implements IGlobalExtension {
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface InjectMock {
 
-	private static final String[] DEFAULT_ANNOTATION_CLASSES = {
-			// java's @Resource
-			"javax.annotation.Resource",
-			// javax' @Inject
-			"javax.Inject",
-			// guice's @Inject
-			"com.google.Inject",
-			// spring's @Autowired
-			"org.springframework.beans.factory.annotation.Autowired",
-			// spring's @Required
-			"org.springframework.beans.factory.annotation.Required" };
+	String name() default "";
 
-	@Override
-	public void visitSpec(final SpecInfo spec) {
+	String value() default "";
 
-	}
+	InstantiationType instantiateAs() default InstantiationType.CUSTOM;
 
 }

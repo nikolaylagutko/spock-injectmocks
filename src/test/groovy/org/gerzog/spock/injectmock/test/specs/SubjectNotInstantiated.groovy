@@ -13,27 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.gerzog.spock.spring.injectmock.test.data
+package org.gerzog.spock.injectmock.test.specs
 
-import javax.annotation.Resource
-import javax.inject.Inject
+import org.gerzog.spock.injectmock.api.InjectMock
+import org.gerzog.spock.injectmock.test.data.FieldInjection
 
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Service
+import spock.lang.Specification
+import spock.lang.Subject
 
 /**
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */
-@Service
-class FieldInjection {
+class SubjectNotInstantiated extends Specification {
 
-	@Autowired
+	@InjectMock
 	def autowiredField
 
-	@Inject
-	def injectField
-
-	@Resource
-	def resourceField
+	@Subject
+	FieldInjection fieldInjection
 }

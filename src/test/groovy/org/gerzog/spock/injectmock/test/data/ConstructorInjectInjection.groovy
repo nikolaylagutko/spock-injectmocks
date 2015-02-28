@@ -13,25 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.gerzog.spock.spring.injectmock.api;
+package org.gerzog.spock.injectmock.test.data
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import javax.inject.Inject
+
+import org.springframework.stereotype.Service
 
 /**
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface SpringInject {
+@Service
+class ConstructorInjectInjection {
 
-	String name() default "";
-
-	String value() default "";
-
-	InstantiationType instantiateAs() default InstantiationType.CUSTOM;
-
+	@Inject
+	public ConstructorInjectInjection(def field1, field2) {
+	}
 }
