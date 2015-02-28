@@ -13,6 +13,8 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'groovy'
+apply plugin: 'com.github.ben-manes.versions'
+apply plugin: 'com.github.kt3k.coveralls'
 
 apply from: 'gradle/custom/ide-java.gradle'
 apply from: 'gradle/custom/jacoco.gradle'
