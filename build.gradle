@@ -7,6 +7,8 @@ buildscript {
 		classpath group: 'com.github.ben-manes',		name: 'gradle-versions-plugin',	version: gradleVersionsVersion
 		classpath group: 'nl.javadude.gradle.plugins',	name: 'license-gradle-plugin',	version: gradleLicenceVersion
 		classpath group: 'org.kt3k.gradle.plugin',		name: 'coveralls-gradle-plugin',		version: gradleCoverallsVersion
+		classpath group: 'com.jfrog.bintray.gradle',	name: 'gradle-bintray-plugin',			version: gradleBintrayVersion
+		classpath group: 'org.jfrog.buildinfo',			name: 'build-info-extractor-gradle',	version: gradleArtifactoryVersion
 	}
 }
 
