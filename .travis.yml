@@ -5,4 +5,4 @@ after_success:
 - "./gradlew jacocoTestReport coveralls"
 env:
   global:
-    secure: IZUFECrJgpt23u/rbSx8Lv2Yg+NfQa58vrHAU51Gym3NGA4E+W5rf2Eqvmfpgxd/dFkRwbAl0u26fVOOmSOjWN3go16TY5jea5Fimz4y2ROvNekhYMFAbUiZBKsbcLUeuHh1TvdM9rSR+Rsk6Y8tYwMnczlB3XXVrwi7hAjmrfY=
+    secure: ay/zl3nTNZFrzoWH3uP6QapQbVrtz1VsDGrgHB1GHLztu3Q8GO51yhG3zfP2PTroqT9ASRrc3FTtGcOZeOfGWkJeqb0tSk0Bq+u0FKKmn3QoNBXhu1MOqphbeG0Yewsp3hSLiQu2TysakRvJXlACSZzz0g09PXoYm+lz6enVDoY=
