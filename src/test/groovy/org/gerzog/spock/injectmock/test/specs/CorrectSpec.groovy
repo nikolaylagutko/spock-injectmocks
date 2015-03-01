@@ -25,11 +25,11 @@ import spock.lang.Subject
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */
-class SubjectNotInstantiated extends Specification {
+class CorrectSpec extends Specification {
 
 	@InjectMock
 	def autowiredField
 
 	@Subject
-	FieldInjection fieldInjection
+	FieldInjection subject
 }

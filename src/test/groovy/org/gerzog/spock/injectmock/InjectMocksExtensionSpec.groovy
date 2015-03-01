@@ -15,11 +15,19 @@
  */
 package org.gerzog.spock.injectmock
 
+import javax.annotation.Resource
+import javax.inject.Inject
+
+import org.gerzog.spock.injectmock.test.specs.CorrectSpec
 import org.gerzog.spock.injectmock.test.specs.MultipleSubject
+import org.gerzog.spock.injectmock.test.specs.NoInjectables
 import org.gerzog.spock.injectmock.test.specs.NoSubject
 import org.spockframework.runtime.InvalidSpecException
 import org.spockframework.runtime.SpecInfoBuilder
 import org.spockframework.runtime.model.SpecInfo
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Required
+import org.springframework.test.util.ReflectionTestUtils
 
 import spock.lang.Specification
 
@@ -28,6 +36,13 @@ import spock.lang.Specification
  *
  */
 class InjectMocksExtensionSpec extends Specification {
+
+	private static final SUPPORTED_ANNOTATIONS = [
+		Resource,
+		Inject,
+		Autowired,
+		Required
+	]
 
 	def extension = new InjectMocksExtension()
 
@@ -45,6 +60,74 @@ class InjectMocksExtensionSpec extends Specification {
 
 		then:
 		thrown(InvalidSpecException)
+	}
+
+	def "check no method interceptor was registered if not @InjectMocks fields present"() {
+		setup:
+		def spec = spec(NoInjectables)
+
+		when:
+		applyExtension(spec)
+
+		then:
+		findInterceptor(spec).isEmpty()
+	}
+
+	def "check method interceptor was registered"() {
+		setup:
+		def spec = spec(CorrectSpec)
+
+		when:
+		applyExtension(spec)
+
+		then:
+		findInterceptor(spec).size() == 1
+	}
+
+	def "check interceptor properties"() {
+		setup:
+		def spec = spec(CorrectSpec)
+
+		when:
+		applyExtension(spec)
+
+		then:
+		validateInterceptor(findInterceptor(spec).first())
+	}
+
+	private void validateInterceptor(def interceptor) {
+		def annotations = ReflectionTestUtils.getField(interceptor, 'supportedAnnotations')
+		def subject = ReflectionTestUtils.getField(interceptor, 'subjectField')
+		def injectables = ReflectionTestUtils.getField(interceptor, 'injectableFields')
+
+		validateInterceptor(annotations, subject, injectables)
+	}
+
+	private void validateInterceptor(def annotations, def subject, def injectables) {
+		assert annotations != null
+		assert subject != null
+		assert injectables
+
+		validateAnnotations(annotations)
+		validateSubject(subject)
+		validateInjectables(injectables)
+	}
+
+	private void validateInjectables(injectables){
+		assert injectables.size() == 1
+		assert injectables.first().name == 'autowiredField'
+	}
+
+	private void validateSubject(def subject) {
+		assert subject.name == 'subject'
+	}
+
+	private void validateAnnotations(def annotations) {
+		assert annotations == SUPPORTED_ANNOTATIONS
+	}
+
+	private findInterceptor(spec) {
+		spec.interceptors.findAll{it instanceof InjectMocksMethodInterceptor}
 	}
 
 	private spec(clazz) {

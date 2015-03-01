@@ -40,7 +40,7 @@ public class InjectMocksExtension implements IGlobalExtension {
 		// java's @Resource
 		"javax.annotation.Resource",
 		// javax' @Inject
-		"javax.Inject",
+		"javax.inject.Inject",
 		// guice's @Inject
 		"com.google.Inject",
 		// spring's @Autowired
@@ -62,7 +62,9 @@ public class InjectMocksExtension implements IGlobalExtension {
 		List<FieldInfo> injectables = getInjectableFields(spec);
 
 		if (!injectables.isEmpty()) {
-			getSubjectField(spec);
+			FieldInfo subject = getSubjectField(spec);
+
+			spec.addInterceptor(new InjectMocksMethodInterceptor(getSupportedAnnotations(), subject, injectables));
 		}
 	}
 

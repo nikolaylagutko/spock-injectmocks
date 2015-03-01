@@ -33,9 +33,9 @@ public class InjectMocksMethodInterceptor extends AbstractMethodInterceptor {
 
 	private final List<FieldInfo> injectableFields;
 
-	public InjectMocksMethodInterceptor(final List<Class<? extends Annotation>> supportedAnnotations, final FieldInfo subjectFields, final List<FieldInfo> injectableFields) {
+	public InjectMocksMethodInterceptor(final List<Class<? extends Annotation>> supportedAnnotations, final FieldInfo subjectField, final List<FieldInfo> injectableFields) {
 		this.supportedAnnotations = supportedAnnotations;
-		this.subjectField = subjectFields;
+		this.subjectField = subjectField;
 		this.injectableFields = injectableFields;
 	}
 
