@@ -1,0 +1,33 @@
+/**
+ * Configuration snapshot artifact uploading to OJO (https://oss.jfrog.org)
+ */
+
+apply plugin: 'com.jfrog.artifactory'
+
+artifactory {
+	contextUrl = 'https://oss.jfrog.org'
+	
+	resolve {
+		repository {
+			repoKey = 'libs-release'
+		}
+	}
+	
+	publish {
+		repository {
+			repoKey = 'oss-snapshot-local'
+			
+			username = 'nikolaylagutko'
+			password = System.env.BINTRAY_API_KEY
+		}
+		
+		defaults {
+			publications 'mavenJava'
+			properties = [
+				'bintray.repo': 	'nikolaylagutko/spock-extensions',
+				'bintray.package': 	'spock-injectmocks',
+				'bintray.version':	version.toString()
+			]			
+		}
+	}
+}

@@ -1,0 +1,12 @@
+/**
+ * Configuration publishing of artifacts to corresponding repo
+ */
+
+apply from: 'gradle/custom/ojo.gradle'
+apply from: 'gradle/custom/bintray.gradle'
+
+task publishToRepo() {
+}
+
+def publishingTarget = version.endsWith("SNAPSHOT") ? artifactoryPublish : bintrayUpload
+publishToRepo.dependsOn publishingTarget
