@@ -57,7 +57,7 @@ bintray {
 	pkg {
 		repo = 'spock-extensions'
 		name = 'spock-injectmocks'
-		desc = 'Mockito's InjectMocks alternative for Spock'
+		desc = 'Mockito''s InjectMocks alternative for Spock'
 		licenses = ['Apache-2.0']
 	}
 }
