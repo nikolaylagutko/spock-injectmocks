@@ -29,6 +29,8 @@ import org.gerzog.spock.injectmock.test.specs.UnmappedInjectables
 import org.spockframework.mock.ISpockMockObject
 import org.spockframework.runtime.InvalidSpecException
 import org.spockframework.runtime.extension.IMethodInvocation
+import org.spockframework.runtime.model.MethodInfo
+import org.spockframework.runtime.model.MethodKind
 import org.spockframework.util.ReflectionUtil
 
 import spock.lang.Specification
@@ -47,7 +49,15 @@ class InjectMocksMethodInterceptorSpec extends Specification implements TestUtil
 
 	def target
 
+	def method = new MethodInfo()
+
 	def spec
+
+	def setup() {
+		method.kind = MethodKind.SETUP
+
+		invocation.method >> method
+	}
 
 	def "check an error occured when @Subject field not initialized"() {
 		setup:
@@ -170,7 +180,7 @@ class InjectMocksMethodInterceptorSpec extends Specification implements TestUtil
 	}
 
 	private applyInterceptor() {
-		interceptor.interceptSetupMethod(invocation)
+		interceptor.intercept(invocation)
 	}
 
 	private initializeInterceptor() {

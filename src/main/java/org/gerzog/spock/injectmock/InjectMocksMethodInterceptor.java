@@ -30,15 +30,16 @@ import org.gerzog.spock.injectmock.internal.IInjector;
 import org.gerzog.spock.injectmock.internal.MethodInjector;
 import org.spockframework.runtime.GroovyRuntimeUtil;
 import org.spockframework.runtime.InvalidSpecException;
-import org.spockframework.runtime.extension.AbstractMethodInterceptor;
+import org.spockframework.runtime.extension.IMethodInterceptor;
 import org.spockframework.runtime.extension.IMethodInvocation;
 import org.spockframework.runtime.model.FieldInfo;
+import org.spockframework.runtime.model.MethodKind;
 
 /**
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */
-public class InjectMocksMethodInterceptor extends AbstractMethodInterceptor {
+public class InjectMocksMethodInterceptor implements IMethodInterceptor {
 
 	private final List<Class<? extends Annotation>> supportedAnnotations;
 
@@ -53,8 +54,10 @@ public class InjectMocksMethodInterceptor extends AbstractMethodInterceptor {
 	}
 
 	@Override
-	public void interceptSetupMethod(final IMethodInvocation invocation) throws Throwable {
-		inject(invocation.getTarget());
+	public void intercept(final IMethodInvocation invocation) throws Throwable {
+		if (invocation.getMethod().getKind() == MethodKind.SETUP) {
+			inject(invocation.getTarget());
+		}
 
 		invocation.proceed();
 	}
