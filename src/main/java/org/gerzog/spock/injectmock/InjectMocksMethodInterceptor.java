@@ -18,7 +18,9 @@ package org.gerzog.spock.injectmock;
 import java.lang.annotation.Annotation;
 import java.util.List;
 
+import org.spockframework.runtime.InvalidSpecException;
 import org.spockframework.runtime.extension.AbstractMethodInterceptor;
+import org.spockframework.runtime.extension.IMethodInvocation;
 import org.spockframework.runtime.model.FieldInfo;
 
 /**
@@ -37,6 +39,32 @@ public class InjectMocksMethodInterceptor extends AbstractMethodInterceptor {
 		this.supportedAnnotations = supportedAnnotations;
 		this.subjectField = subjectField;
 		this.injectableFields = injectableFields;
+	}
+
+	@Override
+	public void interceptSetupMethod(final IMethodInvocation invocation) throws Throwable {
+		initializeInjectables(invocation.getTarget());
+
+		invocation.proceed();
+	}
+
+	private void initializeInjectables(final Object spec) {
+		// first we should validate correctness of spec's fields
+		defineSubject(spec);
+	}
+
+	private Object defineSubject(final Object spec) {
+		Object subject = subjectField.readValue(spec);
+
+		if (subject == null) {
+			throw new InvalidSpecException("@Subject field is not initialized!");
+		}
+
+		return subject;
+	}
+
+	private void validateSubjectInjectables(final Object subject) {
+
 	}
 
 }

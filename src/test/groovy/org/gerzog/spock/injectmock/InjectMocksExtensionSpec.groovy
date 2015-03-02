@@ -15,18 +15,13 @@
  */
 package org.gerzog.spock.injectmock
 
-import javax.annotation.Resource
-import javax.inject.Inject
-
+import org.gerzog.spock.injectmock.test.TestUtilsTrait
 import org.gerzog.spock.injectmock.test.specs.CorrectSpec
 import org.gerzog.spock.injectmock.test.specs.MultipleSubject
 import org.gerzog.spock.injectmock.test.specs.NoInjectables
 import org.gerzog.spock.injectmock.test.specs.NoSubject
 import org.spockframework.runtime.InvalidSpecException
-import org.spockframework.runtime.SpecInfoBuilder
 import org.spockframework.runtime.model.SpecInfo
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Required
 import org.springframework.test.util.ReflectionTestUtils
 
 import spock.lang.Specification
@@ -35,14 +30,7 @@ import spock.lang.Specification
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */
-class InjectMocksExtensionSpec extends Specification {
-
-	private static final SUPPORTED_ANNOTATIONS = [
-		Resource,
-		Inject,
-		Autowired,
-		Required
-	]
+class InjectMocksExtensionSpec extends Specification implements TestUtilsTrait {
 
 	def extension = new InjectMocksExtension()
 
@@ -123,15 +111,11 @@ class InjectMocksExtensionSpec extends Specification {
 	}
 
 	private void validateAnnotations(def annotations) {
-		assert annotations == SUPPORTED_ANNOTATIONS
+		assert annotations == supportedAnnotations()
 	}
 
 	private findInterceptor(spec) {
 		spec.interceptors.findAll{it instanceof InjectMocksMethodInterceptor}
-	}
-
-	private spec(clazz) {
-		new SpecInfoBuilder(clazz).build()
 	}
 
 	private applyExtension(Class specClazz) {
