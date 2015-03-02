@@ -29,11 +29,11 @@ import org.springframework.stereotype.Service
 class FieldInjection {
 
 	@Autowired
-	def autowiredField
+	private autowiredField
 
 	@Inject
-	def injectField
+	private injectField
 
 	@Resource
-	def resourceField
+	private resourceField
 }

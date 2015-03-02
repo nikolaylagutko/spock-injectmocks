@@ -29,19 +29,31 @@ import org.springframework.stereotype.Service
 @Service
 class MethodInjection {
 
+	def autowired
+
+	def inject
+
+	def resource
+
+	def required
+
 	@Autowired
 	def setAutowiredField(field) {
+		autowired = field
 	}
 
 	@Inject
 	def setInjectField(field) {
+		inject  = field
 	}
 
 	@Resource
 	def setResourceField(field) {
+		resource = field
 	}
 
 	@Required
 	def setRequiredField(field) {
+		required = field
 	}
 }

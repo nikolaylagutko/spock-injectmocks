@@ -26,10 +26,16 @@ import spock.lang.Subject
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */
-class CorrectSpec extends Specification {
+class FieldInjectionSpec extends Specification {
 
 	@InjectMock
 	Bean autowiredField
+
+	@InjectMock
+	Bean injectField
+
+	@InjectMock
+	Bean resourceField
 
 	@Subject
 	FieldInjection subject = new FieldInjection()

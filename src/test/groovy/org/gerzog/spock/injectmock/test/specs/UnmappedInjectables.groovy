@@ -13,25 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.gerzog.spock.injectmock.test.data
+package org.gerzog.spock.injectmock.test.specs
 
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Service
+import org.gerzog.spock.injectmock.api.InjectMock
+import org.gerzog.spock.injectmock.test.data.Bean
+
+import spock.lang.Specification
+import spock.lang.Subject
 
 /**
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */
-@Service
-class ConstructorInjection {
+class UnmappedInjectables extends Specification {
 
-	def field1
+	@Subject
+	def bean
 
-	def field2
-
-	@Autowired
-	public ConstructorInjectInjection(def field1, field2) {
-		this.field1 = field1
-		this.field2 = field2
-	}
+	@InjectMock
+	Bean unmapped
 }

@@ -17,7 +17,7 @@ package org.gerzog.spock.injectmock.test.specs
 
 import org.gerzog.spock.injectmock.api.InjectMock
 import org.gerzog.spock.injectmock.test.data.Bean
-import org.gerzog.spock.injectmock.test.data.FieldInjection
+import org.gerzog.spock.injectmock.test.data.MethodInjection
 
 import spock.lang.Specification
 import spock.lang.Subject
@@ -26,11 +26,20 @@ import spock.lang.Subject
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */
-class CorrectSpec extends Specification {
+class MethodInjectionSpec extends Specification {
 
 	@InjectMock
 	Bean autowiredField
 
+	@InjectMock
+	Bean injectField
+
+	@InjectMock
+	Bean resourceField
+
+	@InjectMock
+	Bean requiredField
+
 	@Subject
-	FieldInjection subject = new FieldInjection()
+	MethodInjection subject = new MethodInjection()
 }

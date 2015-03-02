@@ -13,24 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.gerzog.spock.injectmock.test.specs
+package org.gerzog.spock.injectmock.internal;
 
-import org.gerzog.spock.injectmock.api.InjectMock
-import org.gerzog.spock.injectmock.test.data.Bean
-import org.gerzog.spock.injectmock.test.data.FieldInjection
+import java.util.List;
 
-import spock.lang.Specification
-import spock.lang.Subject
+import org.spockframework.runtime.model.FieldInfo;
 
 /**
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */
-class CorrectSpec extends Specification {
+public interface IInjector {
 
-	@InjectMock
-	Bean autowiredField
+	void inject(final Object spec, Object subject, final List<FieldInfo> fields);
 
-	@Subject
-	FieldInjection subject = new FieldInjection()
+	String getPropertyName();
+
 }

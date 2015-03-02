@@ -20,9 +20,12 @@ import org.gerzog.spock.injectmock.test.TestUtilsTrait
 import org.gerzog.spock.injectmock.test.data.Bean
 import org.gerzog.spock.injectmock.test.specs.CorrectSpec
 import org.gerzog.spock.injectmock.test.specs.CustomInjection
+import org.gerzog.spock.injectmock.test.specs.FieldInjectionSpec
+import org.gerzog.spock.injectmock.test.specs.MethodInjectionSpec
 import org.gerzog.spock.injectmock.test.specs.MockInjection
 import org.gerzog.spock.injectmock.test.specs.SpyInjection
 import org.gerzog.spock.injectmock.test.specs.SubjectNotInitialized
+import org.gerzog.spock.injectmock.test.specs.UnmappedInjectables
 import org.spockframework.mock.ISpockMockObject
 import org.spockframework.runtime.InvalidSpecException
 import org.spockframework.runtime.extension.IMethodInvocation
@@ -108,6 +111,44 @@ class InjectMocksMethodInterceptorSpec extends Specification implements TestUtil
 		result != null
 		!(result instanceof ISpockMockObject)
 		result instanceof Bean
+	}
+
+	def "check unmapped injectabled found"() {
+		setup:
+		initialize(UnmappedInjectables)
+
+		when:
+		applyInterceptor()
+
+		then:
+		thrown(InvalidSpecException)
+	}
+
+	def "check fields after field injection"() {
+		setup:
+		initialize(FieldInjectionSpec)
+
+		when:
+		applyInterceptor()
+
+		then:
+		target.subject.autowiredField != null
+		target.subject.injectField != null
+		target.subject.resourceField != null
+	}
+
+	def "check fields after method injection"() {
+		setup:
+		initialize(MethodInjectionSpec)
+
+		when:
+		applyInterceptor()
+
+		then:
+		target.subject.autowired != null
+		target.subject.inject != null
+		target.subject.resource != null
+		target.subject.required != null
 	}
 
 	private initialize(clazz) {

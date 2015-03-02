@@ -16,9 +16,18 @@
 package org.gerzog.spock.injectmock;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AccessibleObject;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.gerzog.spock.injectmock.api.InjectMock;
+import org.gerzog.spock.injectmock.internal.FieldInjector;
+import org.gerzog.spock.injectmock.internal.IInjector;
+import org.gerzog.spock.injectmock.internal.MethodInjector;
 import org.spockframework.runtime.GroovyRuntimeUtil;
 import org.spockframework.runtime.InvalidSpecException;
 import org.spockframework.runtime.extension.AbstractMethodInterceptor;
@@ -53,9 +62,11 @@ public class InjectMocksMethodInterceptor extends AbstractMethodInterceptor {
 	private void inject(final Object specInstance) {
 		Object subject = defineSubject(specInstance);
 
-		validateSubjectInjectables(subject);
-
 		initializeInjectables(specInstance);
+
+		List<IInjector> injectors = defineInjectors(subject);
+
+		injectors.forEach(injector -> injector.inject(specInstance, subject, injectableFields));
 	}
 
 	private Object defineSubject(final Object spec) {
@@ -68,8 +79,51 @@ public class InjectMocksMethodInterceptor extends AbstractMethodInterceptor {
 		return subject;
 	}
 
-	private void validateSubjectInjectables(final Object subject) {
+	private void validateInjectors(final List<IInjector> injectors) {
+		List<FieldInfo> missingFields = injectableFields.stream().filter(field -> hasInjector(field, injectors)).collect(Collectors.toList());
 
+		if (!missingFields.isEmpty()) {
+			throw new InvalidSpecException("Fields <" + toString(missingFields) + "> that cannot be injected.\nPlease verify that @Subject contain field/methods for injection with correct annotations.");
+		}
+	}
+
+	private String toString(final List<FieldInfo> fieldInfo) {
+		return fieldInfo.stream().map(field -> field.getName()).collect(Collectors.joining(", "));
+	}
+
+	private boolean hasInjector(final FieldInfo field, final List<IInjector> injectors) {
+		return !injectors.stream().anyMatch(injector -> injector.getPropertyName().equals(field.getName()));
+	}
+
+	private List<IInjector> defineInjectors(final Object subject) {
+		List<IInjector> result = new ArrayList<>();
+
+		result.addAll(defineMethodInjectors(subject));
+		result.addAll(defineFieldInjectors(subject));
+
+		validateInjectors(result);
+
+		return result;
+	}
+
+	private List<IInjector> defineFieldInjectors(final Object subject) {
+		return createInjectors(subject, subject.getClass()::getDeclaredFields, field -> new FieldInjector(field));
+	}
+
+	private List<IInjector> defineMethodInjectors(final Object subject) {
+		return createInjectors(subject, subject.getClass()::getMethods, method -> new MethodInjector(method));
+	}
+
+	private <T extends AccessibleObject> List<IInjector> createInjectors(final Object subject, final Supplier<T[]> elementProducer, final Function<T, IInjector> injectorProducer) {
+		return Stream.of(elementProducer.get()).filter(this::isAnnotated).map(injectorProducer).filter(this::isInjectablePresent).collect(Collectors.toList());
+	}
+
+	private boolean isInjectablePresent(final IInjector injector) {
+		return injectableFields.stream().anyMatch(field -> field.getName().equals(injector.getPropertyName()));
+	}
+
+	private <T extends AccessibleObject> boolean isAnnotated(final T element) {
+		return supportedAnnotations.stream().anyMatch(annotation -> element.isAnnotationPresent(annotation));
 	}
 
 	private void initializeInjectables(final Object specInstance) {
