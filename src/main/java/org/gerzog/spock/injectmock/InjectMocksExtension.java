@@ -37,16 +37,16 @@ import spock.lang.Subject;
 public class InjectMocksExtension implements IGlobalExtension {
 
 	private static final String[] DEFAULT_ANNOTATION_CLASSES = {
-		// java's @Resource
-		"javax.annotation.Resource",
-		// javax' @Inject
-		"javax.inject.Inject",
-		// guice's @Inject
-		"com.google.Inject",
-		// spring's @Autowired
-		"org.springframework.beans.factory.annotation.Autowired",
-		// spring's @Required
-	"org.springframework.beans.factory.annotation.Required" };
+			// java's @Resource
+			"javax.annotation.Resource",
+			// javax' @Inject
+			"javax.inject.Inject",
+			// guice's @Inject
+			"com.google.Inject",
+			// spring's @Autowired
+			"org.springframework.beans.factory.annotation.Autowired",
+			// spring's @Required
+			"org.springframework.beans.factory.annotation.Required" };
 
 	private static final List<Class<? extends Annotation>> SUPPORTED_ANNOTATIONS;
 
@@ -64,7 +64,7 @@ public class InjectMocksExtension implements IGlobalExtension {
 		if (!injectables.isEmpty()) {
 			FieldInfo subject = getSubjectField(spec);
 
-			spec.addInterceptor(new InjectMocksMethodInterceptor(getSupportedAnnotations(), subject, injectables));
+			spec.getSetupMethod().addInterceptor(new InjectMocksMethodInterceptor(getSupportedAnnotations(), subject, injectables));
 		}
 	}
 

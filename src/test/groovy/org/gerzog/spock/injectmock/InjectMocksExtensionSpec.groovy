@@ -115,7 +115,7 @@ class InjectMocksExtensionSpec extends Specification implements TestUtilsTrait {
 	}
 
 	private findInterceptor(spec) {
-		spec.interceptors.findAll{it instanceof InjectMocksMethodInterceptor}
+		spec.setupMethod.interceptors.findAll{it instanceof InjectMocksMethodInterceptor}
 	}
 
 	private applyExtension(Class specClazz) {

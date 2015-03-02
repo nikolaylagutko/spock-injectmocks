@@ -33,7 +33,6 @@ import org.spockframework.runtime.InvalidSpecException;
 import org.spockframework.runtime.extension.IMethodInterceptor;
 import org.spockframework.runtime.extension.IMethodInvocation;
 import org.spockframework.runtime.model.FieldInfo;
-import org.spockframework.runtime.model.MethodKind;
 
 /**
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
@@ -55,9 +54,7 @@ public class InjectMocksMethodInterceptor implements IMethodInterceptor {
 
 	@Override
 	public void intercept(final IMethodInvocation invocation) throws Throwable {
-		if (invocation.getMethod().getKind() == MethodKind.SETUP) {
-			inject(invocation.getTarget());
-		}
+		inject(invocation.getTarget());
 
 		invocation.proceed();
 	}
