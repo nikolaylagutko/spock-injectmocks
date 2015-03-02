@@ -17,10 +17,16 @@ package org.gerzog.spock.injectmock
 
 import org.gerzog.spock.injectmock.api.InjectMock
 import org.gerzog.spock.injectmock.test.TestUtilsTrait
+import org.gerzog.spock.injectmock.test.data.Bean
+import org.gerzog.spock.injectmock.test.specs.CorrectSpec
+import org.gerzog.spock.injectmock.test.specs.CustomInjection
+import org.gerzog.spock.injectmock.test.specs.MockInjection
+import org.gerzog.spock.injectmock.test.specs.SpyInjection
 import org.gerzog.spock.injectmock.test.specs.SubjectNotInitialized
+import org.spockframework.mock.ISpockMockObject
 import org.spockframework.runtime.InvalidSpecException
 import org.spockframework.runtime.extension.IMethodInvocation
-import org.spockframework.runtime.model.SpecInfo
+import org.spockframework.util.ReflectionUtil
 
 import spock.lang.Specification
 import spock.lang.Subject
@@ -38,43 +44,103 @@ class InjectMocksMethodInterceptorSpec extends Specification implements TestUtil
 
 	def target
 
+	def spec
+
 	def "check an error occured when @Subject field not initialized"() {
 		setup:
-		initializeInterceptor(SubjectNotInitialized)
-		initializeInvocationTarget(SubjectNotInitialized)
+		initialize(SubjectNotInitialized)
 
 		when:
-		applyInterceptor(SubjectNotInitialized)
+		applyInterceptor()
 
 		then:
 		thrown(InvalidSpecException)
 	}
 
-	private initializeInvocationTarget(clazz) {
-		target = clazz.newInstance()
+	def "check original method was called"() {
+		setup:
+		initialize(CorrectSpec)
+
+		when:
+		applyInterceptor()
+
+		then:
+		1 * invocation.proceed()
+	}
+
+	def "check a mock was created for injectable field"() {
+		setup:
+		initialize(MockInjection)
+
+		when:
+		applyInterceptor()
+
+		then:
+		def result = fieldValue('autowiredField')
+		result != null
+		result instanceof ISpockMockObject
+		result instanceof Bean
+	}
+
+	def "check a spy was created for injectable field"() {
+		setup:
+		initialize(SpyInjection)
+
+		when:
+		applyInterceptor()
+
+		then:
+		def result = fieldValue('autowiredField')
+		result != null
+		result instanceof ISpockMockObject
+		result instanceof Bean
+	}
+
+	def "check field value is raw on CUSTOM instantiation type"() {
+		setup:
+		initialize(CustomInjection)
+
+		when:
+		applyInterceptor()
+
+		then:
+		def result = fieldValue('autowiredField')
+		result != null
+		!(result instanceof ISpockMockObject)
+		result instanceof Bean
+	}
+
+	private initialize(clazz) {
+		spec = spec(clazz)
+
+		initializeInterceptor()
+
+		initializeInvocationTarget()
+	}
+
+	private initializeInvocationTarget() {
+		target = spec.reflection.newInstance()
+
+		if (spec.initializerMethod.reflection != null) {
+			ReflectionUtil.invokeMethod(target, spec.initializerMethod.reflection)
+		}
 
 		invocation.target >> target
-
-		target
 	}
 
-	private applyInterceptor(Class clazz) {
-		applyInterceptor(spec(clazz))
-	}
-
-	private applyInterceptor(SpecInfo spec) {
+	private applyInterceptor() {
 		interceptor.interceptSetupMethod(invocation)
 	}
 
-	private initializeInterceptor(Class clazz) {
-		initializeInterceptor(spec(clazz))
+	private initializeInterceptor() {
+		interceptor = new InjectMocksMethodInterceptor(supportedAnnotations(), fields(Subject).first(), fields(InjectMock))
 	}
 
-	private initializeInterceptor(SpecInfo spec) {
-		interceptor = new InjectMocksMethodInterceptor(supportedAnnotations(), fields(spec, Subject).first(), fields(spec, InjectMock))
+	private fieldValue(name) {
+		spec.allFields.findResult { it.name == name ? it.readValue(target) : null}
 	}
 
-	private fields(spec, annotation) {
+	private fields(annotation) {
 		spec.allFields.findAll { it.isAnnotationPresent(annotation) }
 	}
 }

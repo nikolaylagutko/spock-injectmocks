@@ -18,6 +18,8 @@ package org.gerzog.spock.injectmock;
 import java.lang.annotation.Annotation;
 import java.util.List;
 
+import org.gerzog.spock.injectmock.api.InjectMock;
+import org.spockframework.runtime.GroovyRuntimeUtil;
 import org.spockframework.runtime.InvalidSpecException;
 import org.spockframework.runtime.extension.AbstractMethodInterceptor;
 import org.spockframework.runtime.extension.IMethodInvocation;
@@ -43,14 +45,17 @@ public class InjectMocksMethodInterceptor extends AbstractMethodInterceptor {
 
 	@Override
 	public void interceptSetupMethod(final IMethodInvocation invocation) throws Throwable {
-		initializeInjectables(invocation.getTarget());
+		inject(invocation.getTarget());
 
 		invocation.proceed();
 	}
 
-	private void initializeInjectables(final Object spec) {
-		// first we should validate correctness of spec's fields
-		defineSubject(spec);
+	private void inject(final Object specInstance) {
+		Object subject = defineSubject(specInstance);
+
+		validateSubjectInjectables(subject);
+
+		initializeInjectables(specInstance);
 	}
 
 	private Object defineSubject(final Object spec) {
@@ -67,4 +72,39 @@ public class InjectMocksMethodInterceptor extends AbstractMethodInterceptor {
 
 	}
 
+	private void initializeInjectables(final Object specInstance) {
+		injectableFields.forEach(field -> initializeInjectable(field, specInstance));
+	}
+
+	private void initializeInjectable(final FieldInfo field, final Object specInstance) {
+		InjectMock annotation = field.getAnnotation(InjectMock.class);
+
+		switch (annotation.instantiateAs()) {
+		case SPY:
+			spy(specInstance, field);
+			break;
+		case MOCK:
+			mock(specInstance, field);
+			break;
+		case CUSTOM:
+			// leave field value as is
+			break;
+		default:
+			throw new IllegalStateException("InstantiationType <" + annotation.instantiateAs() + " is not supported");
+		}
+	}
+
+	private void mock(final Object specInstance, final FieldInfo field) {
+		applyMockingMethod(specInstance, field, "Mock");
+	}
+
+	private void spy(final Object specInstance, final FieldInfo field) {
+		applyMockingMethod(specInstance, field, "Spy");
+	}
+
+	private void applyMockingMethod(final Object specInstance, final FieldInfo field, final String method) {
+		Object mockValue = GroovyRuntimeUtil.invokeMethod(specInstance, method + "Impl", field.getName(), field.getType());
+
+		field.writeValue(specInstance, mockValue);
+	}
 }

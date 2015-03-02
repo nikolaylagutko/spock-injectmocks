@@ -28,10 +28,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface InjectMock {
 
-	String name() default "";
-
-	String value() default "";
-
-	InstantiationType instantiateAs() default InstantiationType.CUSTOM;
+	InstantiationType instantiateAs() default InstantiationType.MOCK;
 
 }
