@@ -9,4 +9,10 @@ task publishToRepo() {
 }
 
 def publishingTarget = version.endsWith("SNAPSHOT") ? artifactoryPublish : bintrayUpload
-publishToRepo.dependsOn publishingTarget
+
+//artifact should be published only from master (in case of SNAPSHOT) or tag
+def onMaster = System.env.TRAVIS_BRANCH == 'master'
+def isTag = System.env.TRAVIS_TAG != null && !System.env.TRAVIS_TAG.isEmpty()
+if (onMaster || isTag) {
+	publishToRepo.dependsOn publishingTarget
+}
