@@ -20,13 +20,22 @@ import java.util.List;
 import org.spockframework.runtime.model.FieldInfo;
 
 /**
+ * Injector of field from Spec's field value to @Subjec's field
+ *
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */
 public interface IInjector {
 
+	/**
+	 * Inject's corresponding field from candidates to subject retrieving
+	 * field's value from spec
+	 */
 	void inject(final Object spec, Object subject, final List<FieldInfo> fields);
 
+	/**
+	 * Name of injectable property
+	 */
 	String getPropertyName();
 
 }

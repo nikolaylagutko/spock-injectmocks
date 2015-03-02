@@ -21,6 +21,8 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.spockframework.runtime.InvalidSpecException;
 
 /**
+ * Injector implementation for field-based injection
+ *
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */

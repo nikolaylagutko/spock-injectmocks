@@ -31,11 +31,19 @@ import org.spockframework.util.ReflectionUtil;
 import spock.lang.Subject;
 
 /**
+ * Extension entry point.
+ *
+ * Make some verifications on Spec's content and registers method interceptor
+ * for setup method.
+ *
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */
 public class InjectMocksExtension implements IGlobalExtension {
 
+	/*
+	 * List of Annotation classes supported for injection by default
+	 */
 	private static final String[] DEFAULT_ANNOTATION_CLASSES = {
 			// java's @Resource
 			"javax.annotation.Resource",

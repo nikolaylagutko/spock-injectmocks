@@ -22,6 +22,8 @@ import java.util.Optional;
 import org.spockframework.runtime.model.FieldInfo;
 
 /**
+ * General implementation of Injector
+ *
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */
@@ -44,6 +46,9 @@ public abstract class AbstractInjector<T extends AccessibleObject> implements II
 		inject(accessible, subject, value.get());
 	}
 
+	/**
+	 * Asks corresponding Java's element to set value for instance
+	 */
 	protected abstract void inject(T accessible, Object instance, Object value);
 
 	protected abstract String getPropertyName(T accessible);

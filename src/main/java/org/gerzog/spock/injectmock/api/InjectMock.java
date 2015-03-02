@@ -21,6 +21,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * Marks Field as Injectable
+ *
+ * This means that this field will be initialized automatically and it's value
+ * will be injected to corresponding field of @Subject object
+ *
+ * Note that injection is based on name of field or method marked by this
+ * annotation
+ *
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */
@@ -28,6 +36,9 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface InjectMock {
 
+	/*
+	 * Type of instantiation
+	 */
 	InstantiationType instantiateAs() default InstantiationType.MOCK;
 
 }

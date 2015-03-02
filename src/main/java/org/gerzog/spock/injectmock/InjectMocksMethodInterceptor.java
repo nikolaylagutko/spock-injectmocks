@@ -35,6 +35,11 @@ import org.spockframework.runtime.extension.IMethodInvocation;
 import org.spockframework.runtime.model.FieldInfo;
 
 /**
+ * Method Interceptor for Spec's Setup method.
+ *
+ * Initializes injectable fields and then run Setup method itself so it's
+ * possible to work with this fields in Setup method
+ *
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */

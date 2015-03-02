@@ -22,6 +22,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.spockframework.runtime.InvalidSpecException;
 
 /**
+ * Injector implementation for method-based injection
+ *
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */
