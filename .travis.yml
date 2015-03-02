@@ -3,6 +3,8 @@ jdk: oraclejdk8
 script: "./gradlew clean build publishToRepo"
 after_success:
 - "./gradlew jacocoTestReport coveralls"
+- "./gradlew travisciTrigger"
 env:
   global:
-    secure: ay/zl3nTNZFrzoWH3uP6QapQbVrtz1VsDGrgHB1GHLztu3Q8GO51yhG3zfP2PTroqT9ASRrc3FTtGcOZeOfGWkJeqb0tSk0Bq+u0FKKmn3QoNBXhu1MOqphbeG0Yewsp3hSLiQu2TysakRvJXlACSZzz0g09PXoYm+lz6enVDoY=
+  - secure: ay/zl3nTNZFrzoWH3uP6QapQbVrtz1VsDGrgHB1GHLztu3Q8GO51yhG3zfP2PTroqT9ASRrc3FTtGcOZeOfGWkJeqb0tSk0Bq+u0FKKmn3QoNBXhu1MOqphbeG0Yewsp3hSLiQu2TysakRvJXlACSZzz0g09PXoYm+lz6enVDoY=
+  - secure: SavM4Zbe1iMvup+jMX/sLFp9VnBRoWlLivN0d7UumkSdAfIjAVQlTre5d1x1AZZJPq7JREqCKEfwkKawzEWbWkrolOGf8co03Vx4o2fcLER5PGd81nuAIVzXYXV9Z5cVjpZtC5x+xbnUozTetFIWAoGQqXRNZJm4KLWx6VhwZ6o=

@@ -1,0 +1,5 @@
+apply plugin: 'com.github.adrianbk.tcitrigger'
+
+tciTrigger {
+	gitHubRepo 'nikolaylagutko/spock-extensions-examples'
+}
