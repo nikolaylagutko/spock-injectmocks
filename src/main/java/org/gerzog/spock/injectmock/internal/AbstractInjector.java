@@ -49,8 +49,8 @@ public abstract class AbstractInjector<T extends AccessibleObject> implements II
 	/**
 	 * Asks corresponding Java's element to set value for instance
 	 *
-	 * @param java
-	 *            's element for injections
+	 * @param accessible
+	 *            java 's element for injections
 	 * @param instance
 	 *            subject object for injections
 	 * @param value
