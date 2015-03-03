@@ -166,7 +166,7 @@ class InjectMocksMethodInterceptorSpec extends Specification implements TestUtil
 			ReflectionUtil.invokeMethod(target, spec.initializerMethod.reflection)
 		}
 
-		invocation.target >> target
+		invocation.instance >> target
 	}
 
 	private applyInterceptor() {

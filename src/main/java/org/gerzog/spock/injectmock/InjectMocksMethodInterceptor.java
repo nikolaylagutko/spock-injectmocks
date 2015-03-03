@@ -59,7 +59,7 @@ public class InjectMocksMethodInterceptor implements IMethodInterceptor {
 
 	@Override
 	public void intercept(final IMethodInvocation invocation) throws Throwable {
-		inject(invocation.getTarget());
+		inject(invocation.getInstance());
 
 		invocation.proceed();
 	}
