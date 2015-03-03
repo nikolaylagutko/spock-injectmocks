@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 
 import org.gerzog.spock.injectmock.api.InjectMock;
 import org.spockframework.runtime.InvalidSpecException;
-import org.spockframework.runtime.extension.IGlobalExtension;
+import org.spockframework.runtime.extension.AbstractGlobalExtension;
 import org.spockframework.runtime.model.FieldInfo;
 import org.spockframework.runtime.model.SpecInfo;
 import org.spockframework.util.ReflectionUtil;
@@ -39,7 +39,7 @@ import spock.lang.Subject;
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */
-public class InjectMocksExtension implements IGlobalExtension {
+public class InjectMocksExtension extends AbstractGlobalExtension {
 
 	/*
 	 * List of Annotation classes supported for injection by default
@@ -72,7 +72,7 @@ public class InjectMocksExtension implements IGlobalExtension {
 		if (!injectables.isEmpty()) {
 			FieldInfo subject = getSubjectField(spec);
 
-			spec.getSetupMethod().addInterceptor(new InjectMocksMethodInterceptor(getSupportedAnnotations(), subject, injectables));
+			spec.addSetupInterceptor(new InjectMocksMethodInterceptor(getSupportedAnnotations(), subject, injectables));
 		}
 	}
 
