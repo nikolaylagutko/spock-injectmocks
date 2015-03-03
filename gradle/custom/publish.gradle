@@ -12,7 +12,6 @@ def publishingTarget = version.endsWith("SNAPSHOT") ? artifactoryPublish : bintr
 
 //artifact should be published only from master (in case of SNAPSHOT) or tag
 def onMaster = System.env.TRAVIS_BRANCH == 'master'
-def isTag = System.env.TRAVIS_TAG != null && !System.env.TRAVIS_TAG.isEmpty()
-if (onMaster || isTag) {
+if (onMaster) {
 	publishToRepo.dependsOn publishingTarget
 }
