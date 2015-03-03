@@ -162,7 +162,7 @@ class InjectMocksMethodInterceptorSpec extends Specification implements TestUtil
 	private initializeInvocationTarget() {
 		target = spec.reflection.newInstance()
 
-		if (spec.initializerMethod.reflection != null) {
+		if (spec.initializerMethod?.reflection != null) {
 			ReflectionUtil.invokeMethod(target, spec.initializerMethod.reflection)
 		}
 
