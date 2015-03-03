@@ -30,11 +30,20 @@ public interface IInjector {
 	/**
 	 * Inject's corresponding field from candidates to subject retrieving
 	 * field's value from spec
+	 *
+	 * @param spec
+	 *            Spec's instance
+	 * @param subject
+	 *            instance of field marked with @Subject
+	 * @param fields
+	 *            list of fields marked with @InjectMock
 	 */
 	void inject(final Object spec, Object subject, final List<FieldInfo> fields);
 
 	/**
 	 * Name of injectable property
+	 *
+	 * @return name of property associated with current element
 	 */
 	String getPropertyName();
 

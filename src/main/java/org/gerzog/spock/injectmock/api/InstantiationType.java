@@ -24,7 +24,8 @@ package org.gerzog.spock.injectmock.api;
  * <li>SPY - in this case field will be initialized as Spock's Spy
  * <li>CUSTOM - in this case field will not be initialized automatically but
  * will use it's original value (even it is null)
- * 
+ * </ul>
+ *
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */
