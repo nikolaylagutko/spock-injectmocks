@@ -45,29 +45,29 @@ public class InjectMocksExtension extends AbstractGlobalExtension {
 	 * List of Annotation classes supported for injection by default
 	 */
 	private static final String[] DEFAULT_ANNOTATION_CLASSES = {
-			// java's @Resource
-			"javax.annotation.Resource",
-			// javax' @Inject
-			"javax.inject.Inject",
-			// guice's @Inject
-			"com.google.Inject",
-			// spring's @Autowired
-			"org.springframework.beans.factory.annotation.Autowired",
-			// spring's @Required
-			"org.springframework.beans.factory.annotation.Required" };
+		// java's @Resource
+		"javax.annotation.Resource",
+		// javax' @Inject
+		"javax.inject.Inject",
+		// guice's @Inject
+		"com.google.Inject",
+		// spring's @Autowired
+		"org.springframework.beans.factory.annotation.Autowired",
+		// spring's @Required
+	"org.springframework.beans.factory.annotation.Required" };
 
 	private static final List<Class<? extends Annotation>> SUPPORTED_ANNOTATIONS;
 
 	static {
 		@SuppressWarnings("unchecked")
-		List<Class<? extends Annotation>> annotations = Stream.of(DEFAULT_ANNOTATION_CLASSES).map(className -> (Class<? extends Annotation>) ReflectionUtil.loadClassIfAvailable(className)).filter(clazz -> clazz != null).collect(Collectors.toList());
+		final List<Class<? extends Annotation>> annotations = Stream.of(DEFAULT_ANNOTATION_CLASSES).map(className -> (Class<? extends Annotation>) ReflectionUtil.loadClassIfAvailable(className)).filter(clazz -> clazz != null).collect(Collectors.toList());
 
 		SUPPORTED_ANNOTATIONS = Collections.unmodifiableList(annotations);
 	}
 
 	@Override
 	public void visitSpec(final SpecInfo spec) {
-		List<FieldInfo> injectables = getInjectableFields(spec);
+		final List<FieldInfo> injectables = getInjectableFields(spec);
 
 		if (!injectables.isEmpty()) {
 			FieldInfo subject = getSubjectField(spec);

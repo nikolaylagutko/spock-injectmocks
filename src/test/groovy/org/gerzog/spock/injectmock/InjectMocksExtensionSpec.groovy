@@ -101,7 +101,7 @@ class InjectMocksExtensionSpec extends Specification implements TestUtilsTrait {
 		validateInjectables(injectables)
 	}
 
-	private void validateInjectables(injectables){
+	private void validateInjectables(injectables) {
 		assert injectables.size() == 1
 		assert injectables.first().name == 'autowiredField'
 	}
@@ -115,7 +115,7 @@ class InjectMocksExtensionSpec extends Specification implements TestUtilsTrait {
 	}
 
 	private findInterceptor(SpecInfo spec) {
-		spec.setupInterceptors.findAll{it instanceof InjectMocksMethodInterceptor}
+		spec.setupInterceptors.findAll { it instanceof InjectMocksMethodInterceptor }
 	}
 
 	private applyExtension(Class specClazz) {

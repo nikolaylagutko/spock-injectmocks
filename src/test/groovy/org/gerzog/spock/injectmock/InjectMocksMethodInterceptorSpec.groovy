@@ -40,6 +40,8 @@ import spock.lang.Subject
  */
 class InjectMocksMethodInterceptorSpec extends Specification implements TestUtilsTrait {
 
+	static final FIELD_NAME = 'autowiredField'
+
 	@Subject
 	def interceptor
 
@@ -79,7 +81,7 @@ class InjectMocksMethodInterceptorSpec extends Specification implements TestUtil
 		applyInterceptor()
 
 		then:
-		def result = fieldValue('autowiredField')
+		def result = fieldValue(FIELD_NAME)
 		result != null
 		result instanceof ISpockMockObject
 		result instanceof Bean
@@ -93,7 +95,7 @@ class InjectMocksMethodInterceptorSpec extends Specification implements TestUtil
 		applyInterceptor()
 
 		then:
-		def result = fieldValue('autowiredField')
+		def result = fieldValue(FIELD_NAME)
 		result != null
 		result instanceof ISpockMockObject
 		result instanceof Bean
@@ -107,7 +109,7 @@ class InjectMocksMethodInterceptorSpec extends Specification implements TestUtil
 		applyInterceptor()
 
 		then:
-		def result = fieldValue('autowiredField')
+		def result = fieldValue(FIELD_NAME)
 		result != null
 		!(result instanceof ISpockMockObject)
 		result instanceof Bean
@@ -178,7 +180,7 @@ class InjectMocksMethodInterceptorSpec extends Specification implements TestUtil
 	}
 
 	private fieldValue(name) {
-		spec.allFields.findResult { it.name == name ? it.readValue(target) : null}
+		spec.allFields.findResult { it.name == name ? it.readValue(target) : null }
 	}
 
 	private fields(annotation) {

@@ -25,6 +25,9 @@ apply from: 'gradle/custom/jacoco.gradle'
 apply from: 'gradle/custom/license.gradle'
 apply from: 'gradle/custom/publish.gradle'
 apply from: 'gradle/custom/travisci.gradle'
+apply from: 'gradle/custom/findbugs.gradle'
+apply from: 'gradle/custom/codenarc.gradle'
+//apply from: 'gradle/custom/pmd.gradle'
 
 repositories {
 	jcenter()

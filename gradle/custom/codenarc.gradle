@@ -1,0 +1,13 @@
+apply plugin: 'codenarc'
+
+codenarc {
+	toolVersion = codenarcVersion
+}
+
+codenarcMain {
+	configFile = rootProject.file('config/codenarc/ruleset.main.groovy')
+}
+
+codenarcTest {
+	configFile = rootProject.file('config/codenarc/ruleset.test.groovy')
+}
