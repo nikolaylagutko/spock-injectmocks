@@ -44,7 +44,7 @@ class AbstractAnnotatedInjectableSpec extends Specification {
 		field.name >> FIELD_NAME
 		field.type >> FIELD_CLASS
 
-		injectable = Spy(AbstractAnnotatedInjectable, constructorArgs: [
+		injectable = Spy(AbstractAnnotatedInjectable, constructorArgs:[
 			field,
 			INSTANTIATION_METHOD_NAME
 		])

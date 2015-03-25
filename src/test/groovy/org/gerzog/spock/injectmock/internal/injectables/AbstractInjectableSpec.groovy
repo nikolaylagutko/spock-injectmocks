@@ -41,7 +41,7 @@ class AbstractInjectableSpec extends Specification {
 		field.name >> FIELD_NAME
 		field.type >> FIELD_CLASS
 
-		injectable = Spy(AbstractInjectable, constructorArgs: [field])
+		injectable = Spy(AbstractInjectable, constructorArgs:[field])
 	}
 
 	def "verify injectable's name"() {

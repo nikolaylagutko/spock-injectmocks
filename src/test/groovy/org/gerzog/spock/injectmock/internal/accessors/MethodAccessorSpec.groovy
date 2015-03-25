@@ -15,16 +15,13 @@
  */
 package org.gerzog.spock.injectmock.internal.accessors
 
-
-
-
 /**
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */
 class MethodAccessorSpec extends AbstractAccessorSpec {
 
-	def getAccessor() {
+	def initializeAccessor() {
 		new MethodAccessor()
 	}
 }

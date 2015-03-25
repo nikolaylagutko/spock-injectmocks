@@ -38,7 +38,7 @@ abstract class AbstractAccessorSpec extends Specification {
 
 		protected CharSequence protectedValue
 
-		public CharSequence publicValue
+		/*public*/ CharSequence publicValue
 
 		private setPrivateValue(CharSequence value) {
 			privateValue = value
@@ -48,21 +48,21 @@ abstract class AbstractAccessorSpec extends Specification {
 			protectedValue = value
 		}
 
-		public setPublicValue(CharSequence value) {
+		/*public*/void setPublicValue(CharSequence value) {
 			publicValue = value
 		}
 	}
 
-	def accessor = getAccessor()
+	def accessor = initializeAccessor()
 
 	def instance = new TestClass()
 
-	abstract getAccessor()
+	abstract initializeAccessor()
 
 	@Unroll('check existing #name is found')
 	def "check field exists"(def name) {
 		expect:
-		accessor.exists(TestClass, CharSequence, name)
+		initializeAccessor.exists(TestClass, CharSequence, name)
 
 		where:
 		name << ACCESS_NAMES
@@ -70,23 +70,23 @@ abstract class AbstractAccessorSpec extends Specification {
 
 	def "check not existing field"() {
 		expect:
-		!accessor.exists(TestClass, CharSequence, 'unknown')
+		!initializeAccessor.exists(TestClass, CharSequence, 'unknown')
 	}
 
 	def "check type is not compatible"() {
 		expect:
-		!accessor.exists(TestClass, Number, 'privateValue')
+		!initializeAccessor.exists(TestClass, Number, ACCESS_NAMES[0])
 	}
 
 	def "check supertype is OK"() {
 		expect:
-		accessor.exists(TestClass, String, 'privateValue')
+		initializeAccessor.exists(TestClass, String, ACCESS_NAMES[0])
 	}
 
 	@Unroll('check writing to #name')
 	def "check set field"(def name) {
 		when:
-		def result = accessor.set(instance, name, VALUE)
+		initializeAccessor.set(instance, name, VALUE)
 
 		then:
 		validateWriting(instance, name, VALUE)

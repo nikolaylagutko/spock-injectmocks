@@ -43,29 +43,29 @@ class InjectablesSpec extends Specification {
 		expectedClass == null ? result == null : expectedClass.isInstance(result)
 
 		where:
-		annotations| expectedClass
-		[Injectable]| CustomInjectable
+		annotations | expectedClass
+		[Injectable] | CustomInjectable
 		[
 			Injectable,
 			org.gerzog.spock.injectmock.mocking.api.Mock
-		]| MockInjectable
+		] | MockInjectable
 		[
 			Injectable,
 			org.gerzog.spock.injectmock.mocking.api.Spy
-		]| SpyInjectable
+		] | SpyInjectable
 		[
 			Injectable,
 			org.gerzog.spock.injectmock.mocking.api.Stub
-		]| StubInjectable
-		[]| null
+		] | StubInjectable
+		[] | null
 		[
 			org.gerzog.spock.injectmock.mocking.api.Mock
-		]| null
+		] | null
 		[
 			org.gerzog.spock.injectmock.mocking.api.Spy
-		]| null
+		] | null
 		[
 			org.gerzog.spock.injectmock.mocking.api.Stub
-		]| null
+		] | null
 	}
 }

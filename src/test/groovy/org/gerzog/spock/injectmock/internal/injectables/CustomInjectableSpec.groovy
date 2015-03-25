@@ -37,7 +37,7 @@ class CustomInjectableSpec extends Specification {
 		field.readValue(target) >> null
 
 		when:
-		def result = injectable.instantiate(target)
+		injectable.instantiate(target)
 
 		then:
 		thrown(InvalidSpecException)

@@ -15,15 +15,13 @@
  */
 package org.gerzog.spock.injectmock.internal.accessors
 
-
-
 /**
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */
 class FieldAccessorSpec extends AbstractAccessorSpec {
 
-	def getAccessor() {
+	def initializeAccessor() {
 		new FieldAccessor()
 	}
 }
