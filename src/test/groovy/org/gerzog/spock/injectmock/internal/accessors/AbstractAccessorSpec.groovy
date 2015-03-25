@@ -62,7 +62,7 @@ abstract class AbstractAccessorSpec extends Specification {
 	@Unroll('check existing #name is found')
 	def "check field exists"(def name) {
 		expect:
-		initializeAccessor.exists(TestClass, CharSequence, name)
+		accessor.exists(TestClass, CharSequence, name)
 
 		where:
 		name << ACCESS_NAMES
@@ -70,23 +70,23 @@ abstract class AbstractAccessorSpec extends Specification {
 
 	def "check not existing field"() {
 		expect:
-		!initializeAccessor.exists(TestClass, CharSequence, 'unknown')
+		!accessor.exists(TestClass, CharSequence, 'unknown')
 	}
 
 	def "check type is not compatible"() {
 		expect:
-		!initializeAccessor.exists(TestClass, Number, ACCESS_NAMES[0])
+		!accessor.exists(TestClass, Number, ACCESS_NAMES[0])
 	}
 
 	def "check supertype is OK"() {
 		expect:
-		initializeAccessor.exists(TestClass, String, ACCESS_NAMES[0])
+		accessor.exists(TestClass, String, ACCESS_NAMES[0])
 	}
 
 	@Unroll('check writing to #name')
 	def "check set field"(def name) {
 		when:
-		initializeAccessor.set(instance, name, VALUE)
+		accessor.set(instance, name, VALUE)
 
 		then:
 		validateWriting(instance, name, VALUE)
