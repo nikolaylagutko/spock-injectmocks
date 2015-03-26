@@ -13,27 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.gerzog.spock.injectmock.test.data
+package org.gerzog.spock.injectmock.internal.injectables
 
-import javax.annotation.Resource
-import javax.inject.Inject
+import org.spockframework.runtime.InvalidSpecException
+import org.spockframework.runtime.model.FieldInfo
 
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Service
+import spock.lang.Specification
 
 /**
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */
-@Service
-class FieldInjection {
+class CustomInjectableSpec extends Specification {
 
-	@Autowired
-	def autowiredField
+	def field = Mock(FieldInfo)
 
-	@Inject
-	def injectField
+	def target = Mock(Object)
 
-	@Resource
-	def resourceField
+	def injectable = new CustomInjectable(field)
+
+	def "check exception thrown if field not initialized"() {
+		setup:
+		field.readValue(target) >> null
+
+		when:
+		injectable.instantiate(target)
+
+		then:
+		thrown(InvalidSpecException)
+	}
 }

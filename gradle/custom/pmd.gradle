@@ -1,0 +1,23 @@
+apply plugin: 'pmd'
+
+dependencies {
+	pmd group: 'net.sourceforge.pmd',	name: 'pmd-java',	version: pmdVersion
+}
+
+pmd {
+	toolVersion = pmdVersion
+	ruleSetFiles = files('config/pmd/basic.xml', 'config/pmd/unnecessary.xml', 'config/pmd/naming.xml')
+	ruleSets = [  
+		'java-braces', 
+		'java-clone', 
+		'java-codesize', 
+		'java-design',
+		'java-finalizers',
+		'java-imports',
+		'java-optimizations',
+		'java-strictexception',
+		'java-strings',
+		'java-typeresolution',
+		'java-unusedcode' 
+	]
+}

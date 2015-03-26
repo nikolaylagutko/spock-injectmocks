@@ -21,4 +21,5 @@ package org.gerzog.spock.injectmock.test.data
  */
 class Bean {
 
+	def field
 }

@@ -13,27 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.gerzog.spock.injectmock.test.data
+package org.gerzog.spock.injectmock.internal.injectables;
 
-import javax.annotation.Resource
-import javax.inject.Inject
-
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Service
+import org.spockframework.runtime.InvalidSpecException;
+import org.spockframework.runtime.model.FieldInfo;
 
 /**
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */
-@Service
-class FieldInjection {
+class CustomInjectable extends AbstractInjectable {
 
-	@Autowired
-	def autowiredField
+	public CustomInjectable(final FieldInfo fieldInfo) {
+		super(fieldInfo);
+	}
 
-	@Inject
-	def injectField
+	@Override
+	public Object instantiate(final Object target) {
+		Object result = super.instantiate(target);
 
-	@Resource
-	def resourceField
+		if (result == null) {
+			throw new InvalidSpecException("@Injectable field <" + getName() + "> is not mock/spy/stub and is not initialized with any value.");
+		}
+
+		return result;
+	}
+
 }

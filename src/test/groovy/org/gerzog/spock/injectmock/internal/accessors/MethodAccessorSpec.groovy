@@ -13,27 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.gerzog.spock.injectmock.test.data
-
-import javax.annotation.Resource
-import javax.inject.Inject
-
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Service
+package org.gerzog.spock.injectmock.internal.accessors
 
 /**
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */
-@Service
-class FieldInjection {
+class MethodAccessorSpec extends AbstractAccessorSpec {
 
-	@Autowired
-	def autowiredField
-
-	@Inject
-	def injectField
-
-	@Resource
-	def resourceField
+	def initializeAccessor() {
+		new MethodAccessor()
+	}
 }
