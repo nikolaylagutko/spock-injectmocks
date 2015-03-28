@@ -15,14 +15,14 @@
  */
 package org.gerzog.spock.injectmock.injections;
 
+import java.util.List;
+
 /**
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */
-public interface IAccessor {
+public interface IInjector {
 
-	boolean exists(Class<?> clazz, String name, Class<?>... types);
-
-	Object apply(Object target, String name, Object value);
+	Object inject(final Object specInstance, List<IInjectable> injectables);
 
 }

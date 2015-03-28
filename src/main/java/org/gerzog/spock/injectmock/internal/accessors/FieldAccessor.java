@@ -18,17 +18,16 @@ package org.gerzog.spock.injectmock.internal.accessors;
 import java.lang.reflect.Field;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.gerzog.spock.injectmock.injections.IAccessor;
 import org.spockframework.runtime.InvalidSpecException;
 
 /**
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */
-public class FieldAccessor implements IAccessor {
+public class FieldAccessor extends AbstractSingleTypeAccessor {
 
 	@Override
-	public boolean exists(final Class<?> clazz, final Class<?> type, final String name) {
+	public boolean exists(final Class<?> clazz, final String name, final Class<?> type) {
 		Field field = FieldUtils.getDeclaredField(clazz, name, true);
 
 		boolean result = field != null;
@@ -43,9 +42,9 @@ public class FieldAccessor implements IAccessor {
 	}
 
 	@Override
-	public void set(final Object target, final String name, final Object value) {
+	protected void internalSet(final Object target, final String name, final Object value) {
 		try {
-			FieldUtils.writeDeclaredField(target, name, value, true);
+			FieldUtils.writeField(target, name, value, true);
 		} catch (IllegalAccessException e) {
 			throw new InvalidSpecException("Cannot write injectable value to field <" + target.getClass().getSimpleName() + "." + name + ">");
 		}

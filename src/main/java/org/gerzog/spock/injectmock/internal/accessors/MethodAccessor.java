@@ -20,24 +20,23 @@ import java.lang.reflect.Method;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
-import org.gerzog.spock.injectmock.injections.IAccessor;
 import org.spockframework.runtime.InvalidSpecException;
 
 /**
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */
-public class MethodAccessor implements IAccessor {
+public class MethodAccessor extends AbstractSingleTypeAccessor {
 
 	private static final String SETTER_PREFIX = "set";
 
 	@Override
-	public boolean exists(final Class<?> clazz, final Class<?> type, final String name) {
+	public boolean exists(final Class<?> clazz, final String name, final Class<?> type) {
 		return getDeclaredMethod(clazz, type, toMethodName(name)) != null;
 	}
 
 	@Override
-	public void set(final Object target, final String name, final Object value) {
+	protected void internalSet(final Object target, final String name, final Object value) {
 		String methodName = toMethodName(name);
 		Method method = getDeclaredMethod(target.getClass(), value.getClass(), methodName);
 

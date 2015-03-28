@@ -27,7 +27,7 @@ apply from: 'gradle/custom/publish.gradle'
 apply from: 'gradle/custom/travisci.gradle'
 apply from: 'gradle/custom/findbugs.gradle'
 apply from: 'gradle/custom/codenarc.gradle'
-//apply from: 'gradle/custom/pmd.gradle'
+apply from: 'gradle/custom/pmd.gradle'
 
 repositories {
 	jcenter()
@@ -37,8 +37,9 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
-	compile group: 'org.spockframework',	name: 'spock-core',		version: spockVersion
-	compile group: 'org.apache.commons',	name: 'commons-lang3',	version: commonsLangVersion
+	compile group: 'org.spockframework',				name: 'spock-core',			version: spockVersion
+	compile group: 'org.apache.commons',				name: 'commons-lang3',		version: commonsLangVersion
+	compile group: 'com.googlecode.combinatoricslib',	name: 'combinatoricslib',	version: combinatoricsLibVersion
 	
 	testCompile group: 'junit',					name: 'junit',			version: junitVersion
 	testCompile group: 'org.codehaus.groovy',	name: 'groovy-all',		version: groovyVersion
