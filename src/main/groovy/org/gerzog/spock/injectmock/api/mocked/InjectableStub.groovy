@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.gerzog.spock.injectmock.api
+package org.gerzog.spock.injectmock.api.mocked
 
 import groovy.transform.AnnotationCollector
 
+import org.gerzog.spock.injectmock.api.Injectable
 import org.gerzog.spock.injectmock.mocking.api.Stub
 
 /**

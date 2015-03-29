@@ -49,6 +49,18 @@ dependencies {
 	testCompile group: 'cglib',					name: 'cglib',			version: cglibVersion	
 }
 
+//some hacking to compile Groovy first (since it contains Trait class that used in Java-based AST Transformation)
+sourceSets {
+	main {
+		groovy {
+			srcDirs = ['src/main/groovy', 'src/main/java']
+		}
+		java {
+			srcDirs = []
+		}
+	}
+}
+
 test {
 	exclude 'org/gerzog/spock/injectmock/test/specs'	
 }

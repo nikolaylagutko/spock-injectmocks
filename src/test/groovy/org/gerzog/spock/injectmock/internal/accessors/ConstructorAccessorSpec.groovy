@@ -26,6 +26,16 @@ import spock.lang.Unroll
  */
 class ConstructorAccessorSpec extends Specification {
 
+	private static final String CONSTRUCTOR_NAME = 'any'
+
+	private static final String FIRST_PARAMETER = 'param1'
+
+	private static final String SECOND_PARAMETER = 'param2'
+
+	private static final String STRING_VALUE = 'string'
+
+	private static final int INTEGER_VALUE = 1
+
 	static class TestClass {
 
 		def param1
@@ -33,12 +43,12 @@ class ConstructorAccessorSpec extends Specification {
 		def param2
 
 		TestClass(String param1, Integer param2) {
-			this.param1 = param1
-			this.param2 = param2
+			this.FIRST_PARAMETER = param1
+			this.SECOND_PARAMETER = param2
 		}
 
 		TestClass(Integer param2) {
-			this.param2 = param2
+			this.SECOND_PARAMETER = param2
 		}
 
 		TestClass() {
@@ -56,7 +66,7 @@ class ConstructorAccessorSpec extends Specification {
 	@Unroll('check costructor was found for #list parameters')
 	def "check constructor was found by parameter list"(def list) {
 		expect:
-		accessor.exists(TestClass, 'any', list as Class[])
+		accessor.exists(TestClass, CONSTRUCTOR_NAME, list as Class[])
 
 		where:
 		list << [
@@ -69,7 +79,7 @@ class ConstructorAccessorSpec extends Specification {
 	@Unroll('check no constructor of #clazz found for #list parameters')
 	def "check no constructor found by parameter"(def clazz, def list) {
 		expect:
-		!accessor.exists(clazz, 'any', list as Class[])
+		!accessor.exists(clazz, CONSTRUCTOR_NAME, list as Class[])
 
 		where:
 		clazz | list
@@ -80,7 +90,7 @@ class ConstructorAccessorSpec extends Specification {
 	@Unroll('check constructor applied with #args generated object #values')
 	def "check constructor appliance"(def args, def values) {
 		when:
-		def result = accessor.apply(TestClass, 'any', args as Object[])
+		def result = accessor.apply(TestClass, CONSTRUCTOR_NAME, args as Object[])
 
 		then:
 		result != null
@@ -90,14 +100,14 @@ class ConstructorAccessorSpec extends Specification {
 
 		where:
 		args | values
-		['string', 1]| ['param1': 'string', 'param2': 1]
-		[1]| ['param1': null, 'param2': 1]
-		[]| ['param1': null, 'param2': null]
+		[STRING_VALUE, INTEGER_VALUE] | [FIRST_PARAMETER:STRING_VALUE, SECOND_PARAMETER:INTEGER_VALUE]
+		[INTEGER_VALUE] | [FIRST_PARAMETER:null, SECOND_PARAMETER:INTEGER_VALUE]
+		[] | [FIRST_PARAMETER:null, SECOND_PARAMETER:null]
 	}
 
 	def "check constructor cannot be applied"() {
 		when:
-		accessor.apply(AnotherTestClass, 'any', ['string'] as Object[])
+		accessor.apply(AnotherTestClass, CONSTRUCTOR_NAME, [STRING_VALUE] as Object[])
 
 		then:
 		thrown(InvalidSpecException)
