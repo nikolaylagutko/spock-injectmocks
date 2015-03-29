@@ -8,21 +8,10 @@
         This ruleset should turn off UselessParentheses
     </description>
 
-    <rule ref="rulesets/java/naming.xml">
-        <exclude name="LongVariable"/>
+    <rule ref="rulesets/java/naming.xml/LongVariable">
+        <properties>
+        	<property name="minimum" value="30" />
+        </properties>
     </rule>
     
-    <rule name="LongVariable"
-   		language="java"
-  		  since="0.3"
-        message="Avoid excessively long variable names like {0}"
-        class="net.sourceforge.pmd.lang.rule.XPathRule"
-          externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/naming.html#LongVariable">
-      <priority>3</priority>
-      <properties>
-          <property name="minimum" type="Integer" description="The variable length reporting threshold" min="1" max="100" value="30"/>
-      </properties>
-     </rule>
-
-
 </ruleset>

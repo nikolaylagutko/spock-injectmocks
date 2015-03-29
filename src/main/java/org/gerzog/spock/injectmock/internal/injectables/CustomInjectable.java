@@ -30,7 +30,7 @@ class CustomInjectable extends AbstractInjectable {
 
 	@Override
 	public Object instantiate(final Object target) {
-		Object result = super.instantiate(target);
+		final Object result = super.instantiate(target);
 
 		if (result == null) {
 			throw new InvalidSpecException("@Injectable field <" + getName() + "> is not mock/spy/stub and is not initialized with any value.");

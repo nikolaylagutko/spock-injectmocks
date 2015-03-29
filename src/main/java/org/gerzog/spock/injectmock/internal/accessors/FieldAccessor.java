@@ -28,14 +28,12 @@ public class FieldAccessor extends AbstractSingleTypeAccessor {
 
 	@Override
 	public boolean exists(final Class<?> clazz, final String name, final Class<?> type) {
-		Field field = FieldUtils.getDeclaredField(clazz, name, true);
+		final Field field = FieldUtils.getDeclaredField(clazz, name, true);
 
 		boolean result = field != null;
 
-		if (field != null) {
-			if (!field.getType().isAssignableFrom(type)) {
-				result = false;
-			}
+		if ((field != null) && !field.getType().isAssignableFrom(type)) {
+			result = false;
 		}
 
 		return result;
@@ -46,7 +44,7 @@ public class FieldAccessor extends AbstractSingleTypeAccessor {
 		try {
 			FieldUtils.writeField(target, name, value, true);
 		} catch (IllegalAccessException e) {
-			throw new InvalidSpecException("Cannot write injectable value to field <" + target.getClass().getSimpleName() + "." + name + ">");
+			throw new InvalidSpecException("Cannot write injectable value to field <" + target.getClass().getSimpleName() + "." + name + ">", e);
 		}
 	}
 

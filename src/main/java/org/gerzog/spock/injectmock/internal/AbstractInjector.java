@@ -41,7 +41,7 @@ public abstract class AbstractInjector<T extends AccessibleObject> implements II
 
 	@Override
 	public void inject(final Object spec, final Object subject, final List<FieldInfo> fields) {
-		Optional<Object> value = fields.stream().filter(field -> field.getName().equals(propertyName)).map(field -> field.readValue(spec)).findFirst();
+		final Optional<Object> value = fields.stream().filter(field -> field.getName().equals(propertyName)).map(field -> field.readValue(spec)).findFirst();
 
 		inject(accessible, subject, value.get());
 	}

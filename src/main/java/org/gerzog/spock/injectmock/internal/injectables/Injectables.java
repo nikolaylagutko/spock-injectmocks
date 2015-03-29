@@ -35,16 +35,16 @@ import org.spockframework.runtime.model.FieldInfo;
  */
 public final class Injectables {
 
-	private static final Map<Class<? extends Annotation>, Function<FieldInfo, IInjectable>> injectableProducers;
+	private static final Map<Class<? extends Annotation>, Function<FieldInfo, IInjectable>> INJECTABLE_PRODUCERS;
 
 	static {
-		Map<Class<? extends Annotation>, Function<FieldInfo, IInjectable>> map = new HashMap<>();
+		final Map<Class<? extends Annotation>, Function<FieldInfo, IInjectable>> map = new HashMap<>();
 
 		map.put(Mock.class, MockInjectable::new);
 		map.put(Spy.class, SpyInjectable::new);
 		map.put(Stub.class, StubInjectable::new);
 
-		injectableProducers = Collections.unmodifiableMap(map);
+		INJECTABLE_PRODUCERS = Collections.unmodifiableMap(map);
 	}
 
 	private Injectables() {
@@ -55,7 +55,7 @@ public final class Injectables {
 		IInjectable result = null;
 
 		if (field.isAnnotationPresent(Injectable.class)) {
-			Optional<IInjectable> injectable = injectableProducers.entrySet().stream().filter(entry -> field.isAnnotationPresent(entry.getKey())).map(entry -> entry.getValue().apply(field)).findFirst();
+			final Optional<IInjectable> injectable = INJECTABLE_PRODUCERS.entrySet().stream().filter(entry -> field.isAnnotationPresent(entry.getKey())).map(entry -> entry.getValue().apply(field)).findFirst();
 
 			result = injectable.orElseGet(() -> new CustomInjectable(field));
 		}

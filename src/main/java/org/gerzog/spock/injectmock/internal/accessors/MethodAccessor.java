@@ -37,11 +37,11 @@ public class MethodAccessor extends AbstractSingleTypeAccessor {
 
 	@Override
 	protected void internalSet(final Object target, final String name, final Object value) {
-		String methodName = toMethodName(name);
-		Method method = getDeclaredMethod(target.getClass(), value.getClass(), methodName);
+		final String methodName = toMethodName(name);
+		final Method method = getDeclaredMethod(target.getClass(), value.getClass(), methodName);
 
 		if (method != null) {
-			boolean original = method.isAccessible();
+			final boolean original = method.isAccessible();
 			try {
 				method.setAccessible(true);
 				method.invoke(target, value);

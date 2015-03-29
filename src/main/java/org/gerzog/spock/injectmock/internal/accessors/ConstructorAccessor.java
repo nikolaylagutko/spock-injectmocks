@@ -36,8 +36,8 @@ public class ConstructorAccessor implements IAccessor {
 	@Override
 	public Object apply(final Object target, final String name, final Object value) {
 		try {
-			Object[] values = (Object[]) value;
-			Class<?>[] types = InjectMocksUtils.toClassArray(values, Object::getClass);
+			final Object[] values = (Object[]) value;
+			final Class<?>[] types = InjectMocksUtils.toClassArray(values, Object::getClass);
 			return ConstructorUtils.invokeExactConstructor((Class<?>) target, values, types);
 		} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
 			throw new InvalidSpecException("Cannot create <" + target + "> object by constructor args <" + value + ">", e);

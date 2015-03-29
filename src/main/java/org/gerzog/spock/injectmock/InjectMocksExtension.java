@@ -45,16 +45,16 @@ public class InjectMocksExtension extends AbstractGlobalExtension {
 	 * List of Annotation classes supported for injection by default
 	 */
 	private static final String[] DEFAULT_ANNOTATION_CLASSES = {
-		// java's @Resource
-		"javax.annotation.Resource",
-		// javax' @Inject
-		"javax.inject.Inject",
-		// guice's @Inject
-		"com.google.Inject",
-		// spring's @Autowired
-		"org.springframework.beans.factory.annotation.Autowired",
-		// spring's @Required
-	"org.springframework.beans.factory.annotation.Required" };
+			// java's @Resource
+			"javax.annotation.Resource",
+			// javax' @Inject
+			"javax.inject.Inject",
+			// guice's @Inject
+			"com.google.Inject",
+			// spring's @Autowired
+			"org.springframework.beans.factory.annotation.Autowired",
+			// spring's @Required
+			"org.springframework.beans.factory.annotation.Required" };
 
 	private static final List<Class<? extends Annotation>> SUPPORTED_ANNOTATIONS;
 
@@ -70,7 +70,7 @@ public class InjectMocksExtension extends AbstractGlobalExtension {
 		final List<FieldInfo> injectables = getInjectableFields(spec);
 
 		if (!injectables.isEmpty()) {
-			FieldInfo subject = getSubjectField(spec);
+			final FieldInfo subject = getSubjectField(spec);
 
 			spec.addSetupInterceptor(new InjectMocksMethodInterceptor(getSupportedAnnotations(), subject, injectables));
 		}
@@ -85,7 +85,7 @@ public class InjectMocksExtension extends AbstractGlobalExtension {
 	}
 
 	private FieldInfo getSubjectField(final SpecInfo spec) {
-		List<FieldInfo> candidates = getAnnotatedFields(spec, Subject.class);
+		final List<FieldInfo> candidates = getAnnotatedFields(spec, Subject.class);
 
 		if (candidates.isEmpty()) {
 			throw new InvalidSpecException("There is no field with @Subject annotation to inject @InjectMock values");

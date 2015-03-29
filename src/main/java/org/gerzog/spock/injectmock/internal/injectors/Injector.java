@@ -55,17 +55,17 @@ public class Injector implements IInjector {
 
 	@Override
 	public Object inject(final Object specInstance, final List<IInjectable> injectables) {
-		Object result = createInstance(specInstance, injectables);
+		final Object result = createInstance(specInstance, injectables);
 
 		// TODO: need to be refactored for Stream API
-		Iterator<IInjectable> injectableIterator = injectables.iterator();
+		final Iterator<IInjectable> injectableIterator = injectables.iterator();
 		while (injectableIterator.hasNext()) {
-			IInjectable currentInjectable = injectableIterator.next();
+			final IInjectable currentInjectable = injectableIterator.next();
 
-			Optional<IAccessor> accessor = Stream.of(ACCESSORS).filter(it -> it.exists(clazz, currentInjectable.getName(), currentInjectable.getType())).findFirst();
+			final Optional<IAccessor> actualAccessor = Stream.of(ACCESSORS).filter(accessor -> accessor.exists(clazz, currentInjectable.getName(), currentInjectable.getType())).findFirst();
 
-			accessor.ifPresent(it -> {
-				it.apply(result, currentInjectable.getName(), currentInjectable.instantiate(specInstance));
+			actualAccessor.ifPresent(accessor -> {
+				accessor.apply(result, currentInjectable.getName(), currentInjectable.instantiate(specInstance));
 				injectableIterator.remove();
 			});
 		}
@@ -84,15 +84,15 @@ public class Injector implements IInjector {
 	}
 
 	private Optional<List<IInjectable>> defineConstructorArguments(final List<IInjectable> injectables) {
-		ICombinatoricsVector<IInjectable> originalVector = Factory.createVector(injectables);
+		final ICombinatoricsVector<IInjectable> originalVector = Factory.createVector(injectables);
 
-		Generator<IInjectable> combinationGenerator = Factory.createSubSetGenerator(originalVector);
+		final Generator<IInjectable> combinationGenerator = Factory.createSubSetGenerator(originalVector);
 
-		return combinationGenerator.generateAllObjects().stream().sorted((v1, v2) -> v2.getSize() - v1.getSize()).map(vector -> vector.getVector()).filter(this::isConstructorExists).findFirst();
+		return combinationGenerator.generateAllObjects().stream().sorted((vector, anotherVector) -> anotherVector.getSize() - vector.getSize()).map(vector -> vector.getVector()).filter(this::isConstructorExists).findFirst();
 	}
 
 	private boolean isConstructorExists(final List<IInjectable> injectables) {
-		Class<?>[] parameters = InjectMocksUtils.toClassArray(injectables, IInjectable::getType);
+		final Class<?>[] parameters = InjectMocksUtils.toClassArray(injectables, IInjectable::getType);
 
 		return CONSTRUCTOR_ACCESSOR.exists(clazz, DEFAULT_CONSTRUCTOR_METHOD, parameters);
 	}

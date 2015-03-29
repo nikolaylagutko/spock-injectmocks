@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.gerzog.spock.injectmock.api.mocked
+package org.gerzog.spock.injectmock.api
 
 import groovy.transform.AnnotationCollector
 
 import org.gerzog.spock.injectmock.api.Injectable
-import org.gerzog.spock.injectmock.mocking.api.Mock
+import org.gerzog.spock.injectmock.mocking.api.Stub
 
 /**
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */
-@AnnotationCollector([Injectable, Mock])
-@interface InjectableMock {
+@AnnotationCollector([Injectable, Stub])
+@interface InjectableStub {
 }
