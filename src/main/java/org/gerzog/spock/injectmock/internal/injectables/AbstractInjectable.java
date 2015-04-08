@@ -15,6 +15,8 @@
  */
 package org.gerzog.spock.injectmock.internal.injectables;
 
+import java.util.function.Function;
+
 import org.gerzog.spock.injectmock.injections.IInjectable;
 import org.spockframework.runtime.model.FieldInfo;
 
@@ -48,7 +50,15 @@ abstract class AbstractInjectable implements IInjectable {
 
 	@Override
 	public Object instantiate(final Object target) {
-		return field.readValue(target);
+		Object original = field.readValue(target);
+
+		Object actual = getInstatiationProcessor(target).apply(original);
+
+		field.writeValue(target, actual);
+
+		return actual;
 	}
+
+	protected abstract Function<Object, Object> getInstatiationProcessor(Object target);
 
 }

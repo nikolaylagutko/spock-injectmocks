@@ -15,6 +15,8 @@
  */
 package org.gerzog.spock.injectmock.internal.injectables
 
+import java.util.function.Function
+
 import org.spockframework.runtime.model.FieldInfo
 
 import spock.lang.Specification
@@ -41,7 +43,11 @@ class AbstractInjectableSpec extends Specification {
 		field.name >> FIELD_NAME
 		field.type >> FIELD_CLASS
 
-		injectable = Spy(AbstractInjectable, constructorArgs:[field])
+		injectable = new AbstractInjectable(field) {
+					Function getInstatiationProcessor(def target){
+						return { result -> result }
+					}
+				}
 	}
 
 	def "verify injectable's name"() {

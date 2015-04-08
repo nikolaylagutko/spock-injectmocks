@@ -15,9 +15,10 @@
  */
 package org.gerzog.spock.injectmock
 
-import org.gerzog.spock.injectmock.api.InjectMock
+import org.gerzog.spock.injectmock.api.Injectable
 import org.gerzog.spock.injectmock.test.TestUtilsTrait
 import org.gerzog.spock.injectmock.test.data.Bean
+import org.gerzog.spock.injectmock.test.data.FieldInjection
 import org.gerzog.spock.injectmock.test.specs.CorrectSpec
 import org.gerzog.spock.injectmock.test.specs.CustomInjection
 import org.gerzog.spock.injectmock.test.specs.FieldInjectionSpec
@@ -59,7 +60,9 @@ class InjectMocksMethodInterceptorSpec extends Specification implements TestUtil
 		applyInterceptor()
 
 		then:
-		thrown(InvalidSpecException)
+		def result = fieldValue('subject')
+		result != null
+		result instanceof FieldInjection
 	}
 
 	def "check original method was called"() {
@@ -176,7 +179,7 @@ class InjectMocksMethodInterceptorSpec extends Specification implements TestUtil
 	}
 
 	private initializeInterceptor() {
-		interceptor = new InjectMocksMethodInterceptor(supportedAnnotations(), fields(Subject).first(), fields(InjectMock))
+		interceptor = new InjectMocksMethodInterceptor(fields(Subject).first(), fields(Injectable))
 	}
 
 	private fieldValue(name) {

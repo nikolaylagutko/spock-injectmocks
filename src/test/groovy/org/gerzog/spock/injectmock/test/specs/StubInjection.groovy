@@ -13,32 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.gerzog.spock.injectmock.api;
+package org.gerzog.spock.injectmock.test.specs
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.gerzog.spock.injectmock.api.InjectableStub
+import org.gerzog.spock.injectmock.test.data.Bean
+import org.gerzog.spock.injectmock.test.data.FieldInjection
+
+import spock.lang.Specification
+import spock.lang.Subject
 
 /**
- * Marks Field as Injectable
- *
- * This means that this field will be initialized automatically and it's value
- * will be injected to corresponding field of @Subject object
- *
- * Note that injection is based on name of field or method marked by this
- * annotation
- *
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface InjectMock {
+class StubInjection extends Specification {
 
-	/*
-	 * Type of instantiation
-	 */
-	InstantiationType instantiateAs() default InstantiationType.MOCK;
+	@InjectableStub
+	Bean autowiredField
 
+	@Subject
+	FieldInjection subject = new FieldInjection()
 }

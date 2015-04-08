@@ -16,17 +16,14 @@
 package org.gerzog.spock.injectmock;
 
 import java.lang.annotation.Annotation;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import org.gerzog.spock.injectmock.api.InjectMock;
+import org.gerzog.spock.injectmock.api.Injectable;
 import org.spockframework.runtime.InvalidSpecException;
 import org.spockframework.runtime.extension.AbstractGlobalExtension;
 import org.spockframework.runtime.model.FieldInfo;
 import org.spockframework.runtime.model.SpecInfo;
-import org.spockframework.util.ReflectionUtil;
 
 import spock.lang.Subject;
 
@@ -41,30 +38,6 @@ import spock.lang.Subject;
  */
 public class InjectMocksExtension extends AbstractGlobalExtension {
 
-	/*
-	 * List of Annotation classes supported for injection by default
-	 */
-	private static final String[] DEFAULT_ANNOTATION_CLASSES = {
-			// java's @Resource
-			"javax.annotation.Resource",
-			// javax' @Inject
-			"javax.inject.Inject",
-			// guice's @Inject
-			"com.google.Inject",
-			// spring's @Autowired
-			"org.springframework.beans.factory.annotation.Autowired",
-			// spring's @Required
-			"org.springframework.beans.factory.annotation.Required" };
-
-	private static final List<Class<? extends Annotation>> SUPPORTED_ANNOTATIONS;
-
-	static {
-		@SuppressWarnings("unchecked")
-		final List<Class<? extends Annotation>> annotations = Stream.of(DEFAULT_ANNOTATION_CLASSES).map(className -> (Class<? extends Annotation>) ReflectionUtil.loadClassIfAvailable(className)).filter(clazz -> clazz != null).collect(Collectors.toList());
-
-		SUPPORTED_ANNOTATIONS = Collections.unmodifiableList(annotations);
-	}
-
 	@Override
 	public void visitSpec(final SpecInfo spec) {
 		final List<FieldInfo> injectables = getInjectableFields(spec);
@@ -72,16 +45,12 @@ public class InjectMocksExtension extends AbstractGlobalExtension {
 		if (!injectables.isEmpty()) {
 			final FieldInfo subject = getSubjectField(spec);
 
-			spec.addSetupInterceptor(new InjectMocksMethodInterceptor(getSupportedAnnotations(), subject, injectables));
+			spec.addSetupInterceptor(new InjectMocksMethodInterceptor(subject, injectables));
 		}
 	}
 
-	private List<Class<? extends Annotation>> getSupportedAnnotations() {
-		return SUPPORTED_ANNOTATIONS;
-	}
-
 	private List<FieldInfo> getInjectableFields(final SpecInfo spec) {
-		return getAnnotatedFields(spec, InjectMock.class);
+		return getAnnotatedFields(spec, Injectable.class);
 	}
 
 	private FieldInfo getSubjectField(final SpecInfo spec) {

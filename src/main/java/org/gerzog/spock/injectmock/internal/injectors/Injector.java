@@ -31,6 +31,7 @@ import org.paukov.combinatorics.Factory;
 import org.paukov.combinatorics.Generator;
 import org.paukov.combinatorics.ICombinatoricsVector;
 import org.spockframework.runtime.InvalidSpecException;
+import org.spockframework.runtime.model.FieldInfo;
 
 /**
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
@@ -44,13 +45,10 @@ public class Injector implements IInjector {
 
 	private static final IAccessor CONSTRUCTOR_ACCESSOR = new ConstructorAccessor();
 
-	private final Class<?> clazz;
+	private final FieldInfo subjectField;
 
-	private final Object instance;
-
-	public Injector(final Class<?> clazz, final Object instance) {
-		this.clazz = clazz;
-		this.instance = instance;
+	public Injector(final FieldInfo subjectField) {
+		this.subjectField = subjectField;
 	}
 
 	@Override
@@ -62,7 +60,7 @@ public class Injector implements IInjector {
 		while (injectableIterator.hasNext()) {
 			final IInjectable currentInjectable = injectableIterator.next();
 
-			final Optional<IAccessor> actualAccessor = Stream.of(ACCESSORS).filter(accessor -> accessor.exists(clazz, currentInjectable.getName(), currentInjectable.getType())).findFirst();
+			final Optional<IAccessor> actualAccessor = Stream.of(ACCESSORS).filter(accessor -> accessor.exists(subjectField.getType(), currentInjectable.getName(), currentInjectable.getType())).findFirst();
 
 			actualAccessor.ifPresent(accessor -> {
 				accessor.apply(result, currentInjectable.getName(), currentInjectable.instantiate(specInstance));
@@ -74,11 +72,11 @@ public class Injector implements IInjector {
 	}
 
 	private Object createInstance(final Object specInstance, final List<IInjectable> injectables) {
-		Object result = instance;
+		Object result = subjectField.readValue(specInstance);
 
 		if (result == null) {
-			result = defineConstructorArguments(injectables).map(args -> CONSTRUCTOR_ACCESSOR.apply(clazz, DEFAULT_CONSTRUCTOR_METHOD, InjectMocksUtils.toObjectArray(args, injector -> injector.instantiate(specInstance)))).orElseThrow(
-					() -> new InvalidSpecException("There is no constructor for <" + clazz + "> instance with args <" + injectables + ">"));
+			result = defineConstructorArguments(injectables).map(args -> CONSTRUCTOR_ACCESSOR.apply(subjectField.getType(), DEFAULT_CONSTRUCTOR_METHOD, InjectMocksUtils.toObjectArray(args, injector -> injector.instantiate(specInstance)))).orElseThrow(
+					() -> new InvalidSpecException("There is no constructor for <" + subjectField.getType() + "> instance with args <" + injectables + ">"));
 		}
 		return result;
 	}
@@ -94,6 +92,6 @@ public class Injector implements IInjector {
 	private boolean isConstructorExists(final List<IInjectable> injectables) {
 		final Class<?>[] parameters = InjectMocksUtils.toClassArray(injectables, IInjectable::getType);
 
-		return CONSTRUCTOR_ACCESSOR.exists(clazz, DEFAULT_CONSTRUCTOR_METHOD, parameters);
+		return CONSTRUCTOR_ACCESSOR.exists(subjectField.getType(), DEFAULT_CONSTRUCTOR_METHOD, parameters);
 	}
 }

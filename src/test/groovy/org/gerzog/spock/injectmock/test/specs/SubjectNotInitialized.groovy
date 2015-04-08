@@ -15,7 +15,7 @@
  */
 package org.gerzog.spock.injectmock.test.specs
 
-import org.gerzog.spock.injectmock.api.InjectMock
+import org.gerzog.spock.injectmock.api.InjectableMock
 import org.gerzog.spock.injectmock.test.data.FieldInjection
 
 import spock.lang.Specification
@@ -27,7 +27,7 @@ import spock.lang.Subject
  */
 class SubjectNotInitialized extends Specification {
 
-	@InjectMock
+	@InjectableMock
 	def autowiredField
 
 	@Subject

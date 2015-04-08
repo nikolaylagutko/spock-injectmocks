@@ -17,7 +17,6 @@ package org.gerzog.spock.injectmock.api
 
 import groovy.transform.AnnotationCollector
 
-import org.gerzog.spock.injectmock.api.Injectable
 import org.gerzog.spock.injectmock.mocking.api.Spy
 
 /**

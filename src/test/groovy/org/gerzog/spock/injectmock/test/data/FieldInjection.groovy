@@ -15,25 +15,15 @@
  */
 package org.gerzog.spock.injectmock.test.data
 
-import javax.annotation.Resource
-import javax.inject.Inject
-
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Service
-
 /**
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */
-@Service
 class FieldInjection {
 
-	@Autowired
 	def autowiredField
 
-	@Inject
 	def injectField
 
-	@Resource
 	def resourceField
 }

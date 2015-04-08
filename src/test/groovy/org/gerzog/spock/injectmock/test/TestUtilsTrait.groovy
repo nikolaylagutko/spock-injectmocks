@@ -17,12 +17,7 @@ package org.gerzog.spock.injectmock.test
 
 import groovy.transform.Trait
 
-import javax.annotation.Resource
-import javax.inject.Inject
-
 import org.spockframework.runtime.SpecInfoBuilder
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Required
 
 /**
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
@@ -30,17 +25,6 @@ import org.springframework.beans.factory.annotation.Required
  */
 @Trait
 class TestUtilsTrait {
-
-	private static final SUPPORTED_ANNOTATIONS = [
-		Resource,
-		Inject,
-		Autowired,
-		Required
-	]
-
-	def supportedAnnotations() {
-		SUPPORTED_ANNOTATIONS
-	}
 
 	def spec(clazz) {
 		new SpecInfoBuilder(clazz).build()

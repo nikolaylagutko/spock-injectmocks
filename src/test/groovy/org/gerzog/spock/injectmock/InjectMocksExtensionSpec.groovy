@@ -15,6 +15,7 @@
  */
 package org.gerzog.spock.injectmock
 
+import org.apache.commons.lang3.reflect.FieldUtils
 import org.gerzog.spock.injectmock.test.TestUtilsTrait
 import org.gerzog.spock.injectmock.test.specs.CorrectSpec
 import org.gerzog.spock.injectmock.test.specs.MultipleSubject
@@ -22,7 +23,6 @@ import org.gerzog.spock.injectmock.test.specs.NoInjectables
 import org.gerzog.spock.injectmock.test.specs.NoSubject
 import org.spockframework.runtime.InvalidSpecException
 import org.spockframework.runtime.model.SpecInfo
-import org.springframework.test.util.ReflectionTestUtils
 
 import spock.lang.Specification
 
@@ -84,19 +84,16 @@ class InjectMocksExtensionSpec extends Specification implements TestUtilsTrait {
 	}
 
 	private void validateInterceptor(def interceptor) {
-		def annotations = ReflectionTestUtils.getField(interceptor, 'supportedAnnotations')
-		def subject = ReflectionTestUtils.getField(interceptor, 'subjectField')
-		def injectables = ReflectionTestUtils.getField(interceptor, 'injectableFields')
+		def subject = FieldUtils.readField(interceptor, 'subjectField', true)
+		def injectables = FieldUtils.readField(interceptor, 'injectableFields', true)
 
-		validateInterceptor(annotations, subject, injectables)
+		validateInterceptor(subject, injectables)
 	}
 
-	private void validateInterceptor(def annotations, def subject, def injectables) {
-		assert annotations != null
+	private void validateInterceptor(def subject, def injectables) {
 		assert subject != null
 		assert injectables
 
-		validateAnnotations(annotations)
 		validateSubject(subject)
 		validateInjectables(injectables)
 	}
@@ -108,10 +105,6 @@ class InjectMocksExtensionSpec extends Specification implements TestUtilsTrait {
 
 	private void validateSubject(def subject) {
 		assert subject.name == 'subject'
-	}
-
-	private void validateAnnotations(def annotations) {
-		assert annotations == supportedAnnotations()
 	}
 
 	private findInterceptor(SpecInfo spec) {

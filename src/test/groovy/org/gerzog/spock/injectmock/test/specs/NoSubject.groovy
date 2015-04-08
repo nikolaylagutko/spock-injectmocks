@@ -15,7 +15,7 @@
  */
 package org.gerzog.spock.injectmock.test.specs
 
-import org.gerzog.spock.injectmock.api.InjectMock
+import org.gerzog.spock.injectmock.api.InjectableMock
 
 import spock.lang.Specification
 
@@ -25,6 +25,6 @@ import spock.lang.Specification
  */
 class NoSubject extends Specification {
 
-	@InjectMock
+	@InjectableMock
 	def bean
 }

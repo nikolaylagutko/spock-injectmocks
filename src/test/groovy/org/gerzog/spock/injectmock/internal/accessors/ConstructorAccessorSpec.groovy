@@ -43,12 +43,12 @@ class ConstructorAccessorSpec extends Specification {
 		def param2
 
 		TestClass(String param1, Integer param2) {
-			this.FIRST_PARAMETER = param1
-			this.SECOND_PARAMETER = param2
+			this.param1 = param1
+			this.param2 = param2
 		}
 
 		TestClass(Integer param2) {
-			this.SECOND_PARAMETER = param2
+			this.param2 = param2
 		}
 
 		TestClass() {
@@ -100,9 +100,9 @@ class ConstructorAccessorSpec extends Specification {
 
 		where:
 		args | values
-		[STRING_VALUE, INTEGER_VALUE] | [FIRST_PARAMETER:STRING_VALUE, SECOND_PARAMETER:INTEGER_VALUE]
-		[INTEGER_VALUE] | [FIRST_PARAMETER:null, SECOND_PARAMETER:INTEGER_VALUE]
-		[] | [FIRST_PARAMETER:null, SECOND_PARAMETER:null]
+		[STRING_VALUE, INTEGER_VALUE]| [(FIRST_PARAMETER):STRING_VALUE, (SECOND_PARAMETER):INTEGER_VALUE]
+		[INTEGER_VALUE]| [(FIRST_PARAMETER):null, (SECOND_PARAMETER):INTEGER_VALUE]
+		[]| [(FIRST_PARAMETER):null, (SECOND_PARAMETER):null]
 	}
 
 	def "check constructor cannot be applied"() {

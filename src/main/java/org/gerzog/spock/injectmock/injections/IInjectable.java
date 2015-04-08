@@ -15,10 +15,6 @@
  */
 package org.gerzog.spock.injectmock.injections;
 
-import java.util.Optional;
-
-import org.gerzog.spock.injectmock.internal.injectables.Injectables;
-import org.spockframework.runtime.model.FieldInfo;
 
 /**
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
@@ -31,9 +27,5 @@ public interface IInjectable {
 	String getName();
 
 	Object instantiate(Object target);
-
-	default Optional<IInjectable> forField(final FieldInfo field) {
-		return Injectables.forField(field);
-	}
 
 }

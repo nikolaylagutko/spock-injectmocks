@@ -15,7 +15,7 @@
  */
 package org.gerzog.spock.injectmock.test.specs
 
-import org.gerzog.spock.injectmock.api.InjectMock
+import org.gerzog.spock.injectmock.api.InjectableMock
 import org.gerzog.spock.injectmock.test.data.Bean
 import org.gerzog.spock.injectmock.test.data.FieldInjection
 
@@ -28,13 +28,13 @@ import spock.lang.Subject
  */
 class FieldInjectionSpec extends Specification {
 
-	@InjectMock
+	@InjectableMock
 	Bean autowiredField
 
-	@InjectMock
+	@InjectableMock
 	Bean injectField
 
-	@InjectMock
+	@InjectableMock
 	Bean resourceField
 
 	@Subject

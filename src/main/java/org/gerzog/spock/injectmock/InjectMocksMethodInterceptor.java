@@ -15,21 +15,14 @@
  */
 package org.gerzog.spock.injectmock;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.AccessibleObject;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import org.gerzog.spock.injectmock.api.InjectMock;
-import org.gerzog.spock.injectmock.internal.FieldInjector;
-import org.gerzog.spock.injectmock.internal.IInjector;
-import org.gerzog.spock.injectmock.internal.MethodInjector;
-import org.spockframework.runtime.GroovyRuntimeUtil;
-import org.spockframework.runtime.InvalidSpecException;
+import org.gerzog.spock.injectmock.injections.IInjectable;
+import org.gerzog.spock.injectmock.injections.IInjector;
+import org.gerzog.spock.injectmock.internal.injectables.Injectables;
+import org.gerzog.spock.injectmock.internal.injectors.Injector;
 import org.spockframework.runtime.extension.IMethodInterceptor;
 import org.spockframework.runtime.extension.IMethodInvocation;
 import org.spockframework.runtime.model.FieldInfo;
@@ -45,14 +38,11 @@ import org.spockframework.runtime.model.FieldInfo;
  */
 public class InjectMocksMethodInterceptor implements IMethodInterceptor {
 
-	private final List<Class<? extends Annotation>> supportedAnnotations;
-
 	private final FieldInfo subjectField;
 
 	private final List<FieldInfo> injectableFields;
 
-	public InjectMocksMethodInterceptor(final List<Class<? extends Annotation>> supportedAnnotations, final FieldInfo subjectField, final List<FieldInfo> injectableFields) {
-		this.supportedAnnotations = supportedAnnotations;
+	public InjectMocksMethodInterceptor(final FieldInfo subjectField, final List<FieldInfo> injectableFields) {
 		this.subjectField = subjectField;
 		this.injectableFields = injectableFields;
 	}
@@ -65,105 +55,17 @@ public class InjectMocksMethodInterceptor implements IMethodInterceptor {
 	}
 
 	private void inject(final Object specInstance) {
-		final Object subject = defineSubject(specInstance);
+		final IInjector injector = createInjector(specInstance);
 
-		initializeInjectables(specInstance);
-
-		final List<IInjector> injectors = defineInjectors(subject);
-
-		injectors.forEach(injector -> injector.inject(specInstance, subject, injectableFields));
+		injector.inject(specInstance, createInjectables());
 	}
 
-	private Object defineSubject(final Object spec) {
-		final Object subject = subjectField.readValue(spec);
-
-		if (subject == null) {
-			throw new InvalidSpecException("@Subject field is not initialized!");
-		}
-
-		return subject;
+	private List<IInjectable> createInjectables() {
+		return injectableFields.stream().map(field -> Injectables.forField(field)).filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
 	}
 
-	private void validateInjectors(final List<IInjector> injectors) {
-		final List<FieldInfo> missingFields = injectableFields.stream().filter(field -> hasInjector(field, injectors)).collect(Collectors.toList());
-
-		if (!missingFields.isEmpty()) {
-			throw new InvalidSpecException("Fields <" + toString(missingFields) + "> that cannot be injected.\nPlease verify that @Subject contain field/methods for injection with correct annotations.");
-		}
+	private IInjector createInjector(final Object specInstance) {
+		return new Injector(subjectField);
 	}
 
-	private String toString(final List<FieldInfo> fieldInfo) {
-		return fieldInfo.stream().map(field -> field.getName()).collect(Collectors.joining(", "));
-	}
-
-	private boolean hasInjector(final FieldInfo field, final List<IInjector> injectors) {
-		return !injectors.stream().anyMatch(injector -> injector.getPropertyName().equals(field.getName()));
-	}
-
-	private List<IInjector> defineInjectors(final Object subject) {
-		final List<IInjector> result = new ArrayList<>();
-
-		result.addAll(defineMethodInjectors(subject));
-		result.addAll(defineFieldInjectors(subject));
-
-		validateInjectors(result);
-
-		return result;
-	}
-
-	private List<IInjector> defineFieldInjectors(final Object subject) {
-		return createInjectors(subject.getClass()::getDeclaredFields, field -> new FieldInjector(field));
-	}
-
-	private List<IInjector> defineMethodInjectors(final Object subject) {
-		return createInjectors(subject.getClass()::getMethods, method -> new MethodInjector(method));
-	}
-
-	private <T extends AccessibleObject> List<IInjector> createInjectors(final Supplier<T[]> elementProducer, final Function<T, IInjector> injectorProducer) {
-		return Stream.of(elementProducer.get()).filter(this::isAnnotated).map(injectorProducer).filter(this::isInjectablePresent).collect(Collectors.toList());
-	}
-
-	private boolean isInjectablePresent(final IInjector injector) {
-		return injectableFields.stream().anyMatch(field -> field.getName().equals(injector.getPropertyName()));
-	}
-
-	private <T extends AccessibleObject> boolean isAnnotated(final T element) {
-		return supportedAnnotations.stream().anyMatch(annotation -> element.isAnnotationPresent(annotation));
-	}
-
-	private void initializeInjectables(final Object specInstance) {
-		injectableFields.forEach(field -> initializeInjectable(field, specInstance));
-	}
-
-	private void initializeInjectable(final FieldInfo field, final Object specInstance) {
-		final InjectMock annotation = field.getAnnotation(InjectMock.class);
-
-		switch (annotation.instantiateAs()) {
-		case SPY:
-			spy(specInstance, field);
-			break;
-		case MOCK:
-			mock(specInstance, field);
-			break;
-		case CUSTOM:
-			// leave field value as is
-			break;
-		default:
-			throw new IllegalStateException("InstantiationType <" + annotation.instantiateAs() + " is not supported");
-		}
-	}
-
-	private void mock(final Object specInstance, final FieldInfo field) {
-		applyMockingMethod(specInstance, field, "Mock");
-	}
-
-	private void spy(final Object specInstance, final FieldInfo field) {
-		applyMockingMethod(specInstance, field, "Spy");
-	}
-
-	private void applyMockingMethod(final Object specInstance, final FieldInfo field, final String method) {
-		final Object mockValue = GroovyRuntimeUtil.invokeMethod(specInstance, method + "Impl", field.getName(), field.getType());
-
-		field.writeValue(specInstance, mockValue);
-	}
 }

@@ -17,6 +17,7 @@ package org.gerzog.spock.injectmock.internal.injectors
 
 import org.gerzog.spock.injectmock.injections.IInjectable
 import org.spockframework.runtime.InvalidSpecException
+import org.spockframework.runtime.model.FieldInfo
 
 import spock.lang.Specification
 
@@ -73,7 +74,7 @@ class InjectorSpec extends Specification {
 
 		TestBean(String property1, Integer property2) {
 			this(property1)
-			this.SECOND_PROPERTY = property2
+			this.property2 = property2
 		}
 
 		def setProperty3(Long value) {
@@ -89,7 +90,7 @@ class InjectorSpec extends Specification {
 
 	def "check method injection working"() {
 		setup:
-		def injectables = injectables([THIRD_PROPERTY:LONG_VALUE])
+		def injectables = injectables([(THIRD_PROPERTY):LONG_VALUE])
 		initialize(TestBean, instance)
 
 		when:
@@ -101,19 +102,19 @@ class InjectorSpec extends Specification {
 
 	def "check field injection working"() {
 		setup:
-		def injectables = injectables([FIRST_PROPERTY:STRING_VALUE])
+		def injectables = injectables([(FIRST_PROPERTY):STRING_VALUE])
 		initialize(TestBean, instance)
 
 		when:
 		injector.inject(spec, injectables)
 
 		then:
-		instance.FIRST_PROPERTY == STRING_VALUE
+		instance.property1 == STRING_VALUE
 	}
 
 	def "check constructor injection"() {
 		setup:
-		def injectables = injectables([FIRST_PROPERTY:STRING_VALUE, SECOND_PROPERTY:INTEGER_VALUE])
+		def injectables = injectables([(FIRST_PROPERTY):STRING_VALUE, (SECOND_PROPERTY):INTEGER_VALUE])
 		initialize(TestBean)
 
 		when:
@@ -121,13 +122,13 @@ class InjectorSpec extends Specification {
 
 		then:
 		result != null
-		result.FIRST_PROPERTY == STRING_VALUE
-		result.SECOND_PROPERTY == INTEGER_VALUE
+		result.property1 == STRING_VALUE
+		result.property2 == INTEGER_VALUE
 	}
 
 	def "check complext injection"() {
 		setup:
-		def injectables = injectables([FIRST_PROPERTY:STRING_VALUE, THIRD_PROPERTY:LONG_VALUE, FOURTH_PROPERTY:FLOAT_VALUE])
+		def injectables = injectables([(FIRST_PROPERTY):STRING_VALUE, (THIRD_PROPERTY):LONG_VALUE, (FOURTH_PROPERTY):FLOAT_VALUE])
 		initialize(TestBean)
 
 		when:
@@ -135,14 +136,14 @@ class InjectorSpec extends Specification {
 
 		then:
 		result != null
-		result.FIRST_PROPERTY == STRING_VALUE
-		result.THIRD_PROPERTY == LONG_VALUE
-		result.FOURTH_PROPERTY == FLOAT_VALUE
+		result.property1 == STRING_VALUE
+		result.property3 == LONG_VALUE
+		result.property4 == FLOAT_VALUE
 	}
 
 	def "check no constructor found"() {
 		setup:
-		def injectables = injectables([UNKNOWN_PROPERTY:UNKNOWN_VALUE])
+		def injectables = injectables([(UNKNOWN_PROPERTY):UNKNOWN_VALUE])
 		initialize(NoDefaultConstructorBean)
 
 		when:
@@ -167,6 +168,9 @@ class InjectorSpec extends Specification {
 	}
 
 	def initialize(def clazz, def instance = null) {
-		injector = new Injector(clazz, instance)
+		def field = Mock(FieldInfo)
+		field.type >> clazz
+		field.readValue(_) >> instance
+		injector = new Injector(field)
 	}
 }

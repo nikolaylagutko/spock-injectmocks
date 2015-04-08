@@ -15,6 +15,8 @@
  */
 package org.gerzog.spock.injectmock.internal.injectables;
 
+import java.util.function.Function;
+
 import org.spockframework.runtime.GroovyRuntimeUtil;
 import org.spockframework.runtime.InvalidSpecException;
 import org.spockframework.runtime.model.FieldInfo;
@@ -34,15 +36,15 @@ class AbstractAnnotatedInjectable extends AbstractInjectable {
 	}
 
 	@Override
-	public Object instantiate(final Object target) {
-		Object result = super.instantiate(target);
+	protected Function<Object, Object> getInstatiationProcessor(final Object target) {
+		return (object) -> {
+			if (object != null) {
+				throw new InvalidSpecException("Field <" + getName() + "> already have value and cannot be re-initialized.");
+			}
 
-		if (result != null) {
-			throw new InvalidSpecException("Field <" + getName() + "> already have value and cannot be re-initialized.");
-		}
+			object = GroovyRuntimeUtil.invokeMethod(target, instantiationMethodName, getName(), getType());
 
-		result = GroovyRuntimeUtil.invokeMethod(target, instantiationMethodName, getName(), getType());
-
-		return result;
+			return object;
+		};
 	}
 }

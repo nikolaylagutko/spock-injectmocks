@@ -15,6 +15,8 @@
  */
 package org.gerzog.spock.injectmock.internal.injectables;
 
+import java.util.function.Function;
+
 import org.spockframework.runtime.InvalidSpecException;
 import org.spockframework.runtime.model.FieldInfo;
 
@@ -29,14 +31,13 @@ class CustomInjectable extends AbstractInjectable {
 	}
 
 	@Override
-	public Object instantiate(final Object target) {
-		final Object result = super.instantiate(target);
+	protected Function<Object, Object> getInstatiationProcessor(final Object target) {
+		return (object) -> {
+			if (object == null) {
+				throw new InvalidSpecException("@Injectable field <" + getName() + "> is not mock/spy/stub and is not initialized with any value.");
+			}
 
-		if (result == null) {
-			throw new InvalidSpecException("@Injectable field <" + getName() + "> is not mock/spy/stub and is not initialized with any value.");
-		}
-
-		return result;
+			return object;
+		};
 	}
-
 }

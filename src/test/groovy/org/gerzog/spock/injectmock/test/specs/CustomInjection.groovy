@@ -15,8 +15,7 @@
  */
 package org.gerzog.spock.injectmock.test.specs
 
-import org.gerzog.spock.injectmock.api.InjectMock
-import org.gerzog.spock.injectmock.api.InstantiationType
+import org.gerzog.spock.injectmock.api.Injectable
 import org.gerzog.spock.injectmock.test.data.Bean
 import org.gerzog.spock.injectmock.test.data.FieldInjection
 
@@ -29,7 +28,7 @@ import spock.lang.Subject
  */
 class CustomInjection extends Specification {
 
-	@InjectMock(instantiateAs = InstantiationType.CUSTOM)
+	@Injectable
 	def autowiredField = new Bean()
 
 	@Subject

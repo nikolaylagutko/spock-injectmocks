@@ -15,18 +15,10 @@
  */
 package org.gerzog.spock.injectmock.test.data
 
-import javax.annotation.Resource
-import javax.inject.Inject
-
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Required
-import org.springframework.stereotype.Service
-
 /**
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */
-@Service
 class MethodInjection {
 
 	def autowired
@@ -37,22 +29,18 @@ class MethodInjection {
 
 	def required
 
-	@Autowired
 	def setAutowiredField(field) {
 		autowired = field
 	}
 
-	@Inject
 	def setInjectField(field) {
 		inject  = field
 	}
 
-	@Resource
 	def setResourceField(field) {
 		resource = field
 	}
 
-	@Required
 	def setRequiredField(field) {
 		required = field
 	}

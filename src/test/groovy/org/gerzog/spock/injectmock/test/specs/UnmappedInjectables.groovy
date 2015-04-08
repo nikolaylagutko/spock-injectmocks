@@ -15,7 +15,7 @@
  */
 package org.gerzog.spock.injectmock.test.specs
 
-import org.gerzog.spock.injectmock.api.InjectMock
+import org.gerzog.spock.injectmock.api.InjectableMock
 import org.gerzog.spock.injectmock.test.data.Bean
 
 import spock.lang.Specification
@@ -30,6 +30,6 @@ class UnmappedInjectables extends Specification {
 	@Subject
 	def bean
 
-	@InjectMock
+	@InjectableMock
 	Bean unmapped
 }
