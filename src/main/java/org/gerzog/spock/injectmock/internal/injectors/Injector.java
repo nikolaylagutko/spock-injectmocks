@@ -18,6 +18,7 @@ package org.gerzog.spock.injectmock.internal.injectors;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.gerzog.spock.injectmock.injections.IAccessor;
@@ -68,6 +69,10 @@ public class Injector implements IInjector {
 			});
 		}
 
+		if (!injectables.isEmpty()) {
+			throw new InvalidSpecException("Not all @Injectable field was injected to Subject. Please check configuration for fields <" + getInjectableNames(injectables) + ">.");
+		}
+
 		return result;
 	}
 
@@ -77,6 +82,8 @@ public class Injector implements IInjector {
 		if (result == null) {
 			result = defineConstructorArguments(injectables).map(args -> CONSTRUCTOR_ACCESSOR.apply(subjectField.getType(), DEFAULT_CONSTRUCTOR_METHOD, InjectMocksUtils.toObjectArray(args, injector -> injector.instantiate(specInstance)))).orElseThrow(
 					() -> new InvalidSpecException("There is no constructor for <" + subjectField.getType() + "> instance with args <" + injectables + ">"));
+
+			subjectField.writeValue(specInstance, result);
 		}
 		return result;
 	}
@@ -93,5 +100,9 @@ public class Injector implements IInjector {
 		final Class<?>[] parameters = InjectMocksUtils.toClassArray(injectables, IInjectable::getType);
 
 		return CONSTRUCTOR_ACCESSOR.exists(subjectField.getType(), DEFAULT_CONSTRUCTOR_METHOD, parameters);
+	}
+
+	private static String getInjectableNames(final List<IInjectable> injectables) {
+		return injectables.stream().map(IInjectable::getName).collect(Collectors.joining(","));
 	}
 }
