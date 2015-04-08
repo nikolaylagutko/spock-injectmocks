@@ -55,7 +55,7 @@ public class InjectMocksMethodInterceptor implements IMethodInterceptor {
 	}
 
 	private void inject(final Object specInstance) {
-		final IInjector injector = createInjector(specInstance);
+		final IInjector injector = createInjector();
 
 		injector.inject(specInstance, createInjectables());
 	}
@@ -64,7 +64,7 @@ public class InjectMocksMethodInterceptor implements IMethodInterceptor {
 		return injectableFields.stream().map(field -> Injectables.forField(field)).filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
 	}
 
-	private IInjector createInjector(final Object specInstance) {
+	private IInjector createInjector() {
 		return new Injector(subjectField);
 	}
 

@@ -50,9 +50,9 @@ abstract class AbstractInjectable implements IInjectable {
 
 	@Override
 	public Object instantiate(final Object target) {
-		Object original = field.readValue(target);
+		final Object original = field.readValue(target);
 
-		Object actual = getInstatiationProcessor(target).apply(original);
+		final Object actual = getInstatiationProcessor(target).apply(original);
 
 		field.writeValue(target, actual);
 

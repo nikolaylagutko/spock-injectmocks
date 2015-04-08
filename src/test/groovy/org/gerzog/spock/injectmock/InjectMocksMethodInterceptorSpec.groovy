@@ -97,7 +97,6 @@ class InjectMocksMethodInterceptorSpec extends Specification implements TestUtil
 		result instanceof Bean
 	}
 
-
 	def "check a stub was created for injectable field"() {
 		setup:
 		initialize(TestSpecs.STUB_INJECTION)
