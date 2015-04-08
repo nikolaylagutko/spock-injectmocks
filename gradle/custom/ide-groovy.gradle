@@ -5,13 +5,13 @@
 apply plugin: 'eclipse'
 
 task eclipseJdtGroovyPrepare(type: Copy) {
-	from rootProject.file("eclipse/java/org.eclipse.jdt.groovy.core.prefs")
+	from rootProject.file("eclipse/groovy/org.eclipse.jdt.groovy.core.prefs")
 	into project.file(".settings/")
 	outputs.upToDateWhen { false }
 }
 
 task cleanEclipseJdtGroovyUi(type: Delete) {
-	delete project.file(".settings/java/org.eclipse.jdt.groovy.core.prefs")
+	delete project.file(".settings/org.eclipse.jdt.groovy.core.prefs")
 }
 
 tasks["eclipseJdt"].dependsOn(eclipseJdtGroovyPrepare)

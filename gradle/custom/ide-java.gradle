@@ -17,8 +17,8 @@ task eclipseJdtPrepare(type: Copy) {
 }
 
 task cleanEclipseJdtUi(type: Delete) {
-	delete project.file(".settings/java/org.eclipse.jdt.ui.prefs")
-	delete project.file(".settings/java/org.eclipse.jdt.core.prefs")
+	delete project.file(".settings/org.eclipse.jdt.ui.prefs")
+	delete project.file(".settings/org.eclipse.jdt.core.prefs")
 }
 
 tasks["eclipseJdt"].dependsOn(eclipseJdtPrepare)
