@@ -21,6 +21,7 @@ apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'net.researchgate.release'
 
 apply from: 'gradle/custom/ide-java.gradle'
+apply from: 'gradle/custom/ide-groovy.gradle'
 apply from: 'gradle/custom/jacoco.gradle'
 apply from: 'gradle/custom/license.gradle'
 apply from: 'gradle/custom/publish.gradle'
