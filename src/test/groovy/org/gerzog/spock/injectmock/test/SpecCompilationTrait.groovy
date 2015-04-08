@@ -17,16 +17,41 @@ package org.gerzog.spock.injectmock.test
 
 import groovy.transform.Trait
 
-import org.spockframework.runtime.SpecInfoBuilder
+import org.apache.commons.io.IOUtils
+
+import spock.util.EmbeddedSpecCompiler
 
 /**
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
  */
 @Trait
-class TestUtilsTrait implements SpecCompilationTrait {
+class SpecCompilationTrait {
 
-	def spec(name) {
-		new SpecInfoBuilder(compileSpec(name)).build()
+	def spec
+
+	EmbeddedSpecCompiler compiler = new EmbeddedSpecCompiler()
+
+	def compile(text) {
+		def classes = compiler.compile(text)
+
+		classes.first()
+	}
+
+	def compileSpec(name) {
+		def specText
+		SpecCompilationTrait.getResource('/' + convertClassNameToPath(name)).withInputStream {
+			specText = IOUtils.toString(it)
+		}
+
+		compile(specText)
+	}
+
+	def newSpec(name) {
+		compileSpec(name).newInstance()
+	}
+
+	def convertClassNameToPath(name) {
+		name.replace('.', File.separator) + '.groovy'
 	}
 }

@@ -43,7 +43,8 @@ dependencies {
 	
 	testCompile group: 'junit',					name: 'junit',			version: junitVersion
 	testCompile group: 'org.codehaus.groovy',	name: 'groovy-all',		version: groovyVersion
-	testCompile group: 'cglib',					name: 'cglib',			version: cglibVersion	
+	testCompile group: 'cglib',					name: 'cglib',			version: cglibVersion
+	testCompile group: 'commons-io',			name: 'commons-io',		version: commonsIOVersion	
 }
 
 //some hacking to compile Groovy first (since it contains Trait class that used in Java-based AST Transformation)

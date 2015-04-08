@@ -17,10 +17,7 @@ package org.gerzog.spock.injectmock
 
 import org.apache.commons.lang3.reflect.FieldUtils
 import org.gerzog.spock.injectmock.test.TestUtilsTrait
-import org.gerzog.spock.injectmock.test.specs.CorrectSpec
-import org.gerzog.spock.injectmock.test.specs.MultipleSubject
-import org.gerzog.spock.injectmock.test.specs.NoInjectables
-import org.gerzog.spock.injectmock.test.specs.NoSubject
+import org.gerzog.spock.injectmock.test.specs.TestSpecs
 import org.spockframework.runtime.InvalidSpecException
 import org.spockframework.runtime.model.SpecInfo
 
@@ -35,16 +32,22 @@ class InjectMocksExtensionSpec extends Specification implements TestUtilsTrait {
 	def extension = new InjectMocksExtension()
 
 	def "check an error if spec didn't contain subject for @InjectMock fields"() {
+		setup:
+		def spec = spec(TestSpecs.NO_SUBJECT)
+
 		when:
-		applyExtension(NoSubject)
+		applyExtension(spec)
 
 		then:
 		thrown(InvalidSpecException)
 	}
 
 	def "check an error when @Subject annotation applied to many fields"() {
+		setup:
+		def spec = spec(TestSpecs.MULTIPLE_SUBJECT)
+
 		when:
-		applyExtension(MultipleSubject)
+		applyExtension(spec)
 
 		then:
 		thrown(InvalidSpecException)
@@ -52,7 +55,7 @@ class InjectMocksExtensionSpec extends Specification implements TestUtilsTrait {
 
 	def "check no method interceptor was registered if not @InjectMocks fields present"() {
 		setup:
-		def spec = spec(NoInjectables)
+		def spec = spec(TestSpecs.NO_INJECTABLES)
 
 		when:
 		applyExtension(spec)
@@ -63,7 +66,7 @@ class InjectMocksExtensionSpec extends Specification implements TestUtilsTrait {
 
 	def "check method interceptor was registered"() {
 		setup:
-		def spec = spec(CorrectSpec)
+		def spec = spec(TestSpecs.CORRECT_SPEC)
 
 		when:
 		applyExtension(spec)
@@ -74,7 +77,7 @@ class InjectMocksExtensionSpec extends Specification implements TestUtilsTrait {
 
 	def "check interceptor properties"() {
 		setup:
-		def spec = spec(CorrectSpec)
+		def spec = spec(TestSpecs.CORRECT_SPEC)
 
 		when:
 		applyExtension(spec)

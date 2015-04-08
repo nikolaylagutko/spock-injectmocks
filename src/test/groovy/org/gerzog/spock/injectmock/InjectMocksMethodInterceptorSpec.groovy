@@ -19,14 +19,7 @@ import org.gerzog.spock.injectmock.api.Injectable
 import org.gerzog.spock.injectmock.test.TestUtilsTrait
 import org.gerzog.spock.injectmock.test.data.Bean
 import org.gerzog.spock.injectmock.test.data.FieldInjection
-import org.gerzog.spock.injectmock.test.specs.CorrectSpec
-import org.gerzog.spock.injectmock.test.specs.CustomInjection
-import org.gerzog.spock.injectmock.test.specs.FieldInjectionSpec
-import org.gerzog.spock.injectmock.test.specs.MethodInjectionSpec
-import org.gerzog.spock.injectmock.test.specs.MockInjection
-import org.gerzog.spock.injectmock.test.specs.SpyInjection
-import org.gerzog.spock.injectmock.test.specs.SubjectNotInitialized
-import org.gerzog.spock.injectmock.test.specs.UnmappedInjectables
+import org.gerzog.spock.injectmock.test.specs.TestSpecs
 import org.spockframework.mock.ISpockMockObject
 import org.spockframework.runtime.InvalidSpecException
 import org.spockframework.runtime.extension.IMethodInvocation
@@ -54,7 +47,7 @@ class InjectMocksMethodInterceptorSpec extends Specification implements TestUtil
 
 	def "check an error occured when @Subject field not initialized"() {
 		setup:
-		initialize(SubjectNotInitialized)
+		initialize(TestSpecs.SUBJECT_NOT_INITIALIZED)
 
 		when:
 		applyInterceptor()
@@ -67,7 +60,7 @@ class InjectMocksMethodInterceptorSpec extends Specification implements TestUtil
 
 	def "check original method was called"() {
 		setup:
-		initialize(CorrectSpec)
+		initialize(TestSpecs.CORRECT_SPEC)
 
 		when:
 		applyInterceptor()
@@ -78,7 +71,7 @@ class InjectMocksMethodInterceptorSpec extends Specification implements TestUtil
 
 	def "check a mock was created for injectable field"() {
 		setup:
-		initialize(MockInjection)
+		initialize(TestSpecs.MOCK_INJECTION)
 
 		when:
 		applyInterceptor()
@@ -92,7 +85,22 @@ class InjectMocksMethodInterceptorSpec extends Specification implements TestUtil
 
 	def "check a spy was created for injectable field"() {
 		setup:
-		initialize(SpyInjection)
+		initialize(TestSpecs.SPY_INJECTION)
+
+		when:
+		applyInterceptor()
+
+		then:
+		def result = fieldValue(FIELD_NAME)
+		result != null
+		result instanceof ISpockMockObject
+		result instanceof Bean
+	}
+
+
+	def "check a stub was created for injectable field"() {
+		setup:
+		initialize(TestSpecs.STUB_INJECTION)
 
 		when:
 		applyInterceptor()
@@ -106,7 +114,7 @@ class InjectMocksMethodInterceptorSpec extends Specification implements TestUtil
 
 	def "check field value is raw on CUSTOM instantiation type"() {
 		setup:
-		initialize(CustomInjection)
+		initialize(TestSpecs.CUSTOM_INJECTION)
 
 		when:
 		applyInterceptor()
@@ -120,7 +128,7 @@ class InjectMocksMethodInterceptorSpec extends Specification implements TestUtil
 
 	def "check unmapped injectabled found"() {
 		setup:
-		initialize(UnmappedInjectables)
+		initialize(TestSpecs.UNMAPPED_INJECTABLES)
 
 		when:
 		applyInterceptor()
@@ -131,7 +139,7 @@ class InjectMocksMethodInterceptorSpec extends Specification implements TestUtil
 
 	def "check fields after field injection"() {
 		setup:
-		initialize(FieldInjectionSpec)
+		initialize(TestSpecs.FIELD_INJECTION)
 
 		when:
 		applyInterceptor()
@@ -144,7 +152,7 @@ class InjectMocksMethodInterceptorSpec extends Specification implements TestUtil
 
 	def "check fields after method injection"() {
 		setup:
-		initialize(MethodInjectionSpec)
+		initialize(TestSpecs.METHOD_INJECTION)
 
 		when:
 		applyInterceptor()
@@ -156,8 +164,8 @@ class InjectMocksMethodInterceptorSpec extends Specification implements TestUtil
 		target.subject.required != null
 	}
 
-	private initialize(clazz) {
-		spec = spec(clazz)
+	private initialize(name) {
+		spec = spec(name)
 
 		initializeInterceptor()
 
