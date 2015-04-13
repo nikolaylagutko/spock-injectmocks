@@ -23,6 +23,7 @@ import org.gerzog.spock.injectmock.injections.IInjectable;
 import org.gerzog.spock.injectmock.injections.IInjector;
 import org.gerzog.spock.injectmock.internal.injectables.Injectables;
 import org.gerzog.spock.injectmock.internal.injectors.Injector;
+import org.spockframework.runtime.InvalidSpecException;
 import org.spockframework.runtime.extension.IMethodInterceptor;
 import org.spockframework.runtime.extension.IMethodInvocation;
 import org.spockframework.runtime.model.FieldInfo;
@@ -64,7 +65,15 @@ public class InjectMocksMethodInterceptor implements IMethodInterceptor {
 		return injectableFields.stream().map(field -> Injectables.forField(field)).filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
 	}
 
+	private static void validateSubjectField(final FieldInfo field) {
+		if (field.getType().equals(Object.class)) {
+			throw new InvalidSpecException("Type of @Subject field cannot be Object. Check you declare @Subject with correct type but not 'def' keyword.");
+		}
+	}
+
 	private IInjector createInjector() {
+		validateSubjectField(subjectField);
+
 		return new Injector(subjectField);
 	}
 

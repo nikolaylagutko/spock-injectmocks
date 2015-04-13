@@ -44,4 +44,6 @@ class TestSpecs {
 	final static SUBJECT_NOT_INITIALIZED = 'org.gerzog.spock.injectmock.test.specs.SubjectNotInitialized'
 
 	final static UNMAPPED_INJECTABLES = 'org.gerzog.spock.injectmock.test.specs.UnmappedInjectables'
+
+	final static NO_SUBJECT_TYPE = 'org.gerzog.spock.injectmock.test.specs.NoSubjectType'
 }

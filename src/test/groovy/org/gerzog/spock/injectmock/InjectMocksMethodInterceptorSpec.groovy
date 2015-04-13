@@ -136,6 +136,18 @@ class InjectMocksMethodInterceptorSpec extends Specification implements TestUtil
 		thrown(InvalidSpecException)
 	}
 
+
+	def "check an error if @Subject annotation applied to 'def' field"() {
+		setup:
+		initialize(TestSpecs.NO_SUBJECT_TYPE)
+
+		when:
+		applyInterceptor()
+
+		then:
+		thrown(InvalidSpecException)
+	}
+
 	def "check fields after field injection"() {
 		setup:
 		initialize(TestSpecs.FIELD_INJECTION)
