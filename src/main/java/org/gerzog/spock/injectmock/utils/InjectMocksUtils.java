@@ -20,6 +20,8 @@ import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.stream.Stream;
 
+import org.spockframework.runtime.model.FieldInfo;
+
 /**
  * @author Nikolay Lagutko (nikolay.lagutko@mail.com)
  *
@@ -48,6 +50,16 @@ public final class InjectMocksUtils {
 
 	private static <T, C> C[] toArray(final Stream<T> objects, final Function<T, C> converter, final IntFunction<C[]> arrayGenerator) {
 		return objects.map(converter).toArray(arrayGenerator);
+	}
+
+	public static Class<?> getTargetClass(final FieldInfo field, final Object instance) {
+		Class<?> result = field.getType();
+
+		if (result.equals(Object.class)) {
+			result = instance.getClass();
+		}
+
+		return result;
 	}
 
 }

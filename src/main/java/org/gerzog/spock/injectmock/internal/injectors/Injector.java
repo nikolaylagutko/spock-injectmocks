@@ -52,20 +52,10 @@ public class Injector implements IInjector {
 		this.subjectField = subjectField;
 	}
 
-	private static Class<?> defineTargetClass(final FieldInfo subjectField, final Object instance) {
-		Class<?> result = subjectField.getType();
-
-		if (result.equals(Object.class)) {
-			result = instance.getClass();
-		}
-
-		return result;
-	}
-
 	@Override
 	public Object inject(final Object specInstance, final List<IInjectable> injectables) {
 		final Object result = createInstance(specInstance, injectables);
-		final Class<?> targetClass = defineTargetClass(subjectField, result);
+		final Class<?> targetClass = InjectMocksUtils.getTargetClass(subjectField, result);
 
 		// TODO: need to be refactored for Stream API
 		final Iterator<IInjectable> injectableIterator = injectables.iterator();
@@ -96,6 +86,11 @@ public class Injector implements IInjector {
 
 			subjectField.writeValue(specInstance, result);
 		}
+
+		if (result.getClass().equals(Object.class)) {
+			throw new InvalidSpecException("Type of @Subject field cannot be Object. Check you declare @Subject with correct type but not 'def' keyword.");
+		}
+
 		return result;
 	}
 
