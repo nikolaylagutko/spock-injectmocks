@@ -52,16 +52,27 @@ public class Injector implements IInjector {
 		this.subjectField = subjectField;
 	}
 
+	private static Class<?> defineTargetClass(final FieldInfo subjectField, final Object instance) {
+		Class<?> result = subjectField.getType();
+
+		if (result.equals(Object.class)) {
+			result = instance.getClass();
+		}
+
+		return result;
+	}
+
 	@Override
 	public Object inject(final Object specInstance, final List<IInjectable> injectables) {
 		final Object result = createInstance(specInstance, injectables);
+		Class<?> targetClass = defineTargetClass(subjectField, result);
 
 		// TODO: need to be refactored for Stream API
 		final Iterator<IInjectable> injectableIterator = injectables.iterator();
 		while (injectableIterator.hasNext()) {
 			final IInjectable currentInjectable = injectableIterator.next();
 
-			final Optional<IAccessor> actualAccessor = Stream.of(ACCESSORS).filter(accessor -> accessor.exists(subjectField.getType(), currentInjectable.getName(), currentInjectable.getType())).findFirst();
+			final Optional<IAccessor> actualAccessor = Stream.of(ACCESSORS).filter(accessor -> accessor.exists(targetClass, currentInjectable.getName(), currentInjectable.getType())).findFirst();
 
 			actualAccessor.ifPresent(accessor -> {
 				accessor.apply(result, currentInjectable.getName(), currentInjectable.instantiate(specInstance));
