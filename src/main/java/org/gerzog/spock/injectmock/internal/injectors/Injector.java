@@ -65,7 +65,7 @@ public class Injector implements IInjector {
 	@Override
 	public Object inject(final Object specInstance, final List<IInjectable> injectables) {
 		final Object result = createInstance(specInstance, injectables);
-		Class<?> targetClass = defineTargetClass(subjectField, result);
+		final Class<?> targetClass = defineTargetClass(subjectField, result);
 
 		// TODO: need to be refactored for Stream API
 		final Iterator<IInjectable> injectableIterator = injectables.iterator();
