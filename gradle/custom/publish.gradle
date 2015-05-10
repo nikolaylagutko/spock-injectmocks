@@ -4,6 +4,55 @@
 
 apply from: 'gradle/custom/ojo.gradle'
 apply from: 'gradle/custom/bintray.gradle'
+apply plugin: 'maven-publish'
+
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+	classifier = 'javadoc'
+	from 'build/docs/javadoc'
+}
+
+task sourcesJar(type: Jar) {
+	from sourceSets.main.allSource
+	classifier = 'sources'
+}
+
+def pomConfig = {
+	resolveStrategy = Closure.DELEGATE_FIRST
+
+	licenses {
+		license {
+			name 'The Apache Software License, Version 2.0'
+			url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+			distribution 'repo'
+		}
+	}
+	developers {
+		developer {
+			id 'nikolaylagutko'
+			name 'Nikolay Lagutko'
+			email 'NikolayLagutko@mail.com'
+		}
+	}
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			from components.java
+			artifact sourcesJar
+			artifact javadocJar
+			
+			pom.withXml {
+				asNode().children().last() + pomConfig
+			}
+		}
+	}
+}
+
+task install(dependsOn: 'publishMavenJavaPublicationToMavenLocal') << {
+	logger.info "Installing $project.name"
+}
 
 task publishToRepo() {
 }
@@ -13,5 +62,6 @@ def publishingTarget = version.endsWith("SNAPSHOT") ? artifactoryPublish : bintr
 //artifact should be published only from master (in case of SNAPSHOT) or tag
 def onMaster = System.env.TRAVIS_BRANCH == 'master'
 if (onMaster) {
+	publishingTarget.dependsOn install
 	publishToRepo.dependsOn publishingTarget
 }
